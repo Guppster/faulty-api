@@ -1,0 +1,54 @@
+{
+target_milestone=---
+summary=Navigator does not free preference hash table when exit.
+see_also=[Ljava.lang.Object;@cd63cd3
+last_change_time=Wed Nov 20 02:16:47 EET 2013
+is_confirmed=true
+is_open=false
+assigned_to_detail={id=1672, email=mcafee@gmail.com, name=mcafee@gmail.com, real_name=Chris McAfee}
+cf_fx_points=---
+cf_fx_iteration=---
+resolution=WONTFIX
+depends_on=[Ljava.lang.Object;@4533473a
+version=1998-03-31
+cc_detail=[Ljava.lang.Object;@29895454
+creator=weitsang@cs.cornell.edu
+id=35
+op_sys=Solaris
+creator_detail={id=55, email=weitsang@cs.cornell.edu, name=weitsang@cs.cornell.edu, real_name=}
+component=XFE
+cf_user_story=
+priority=P3
+qa_contact=
+creation_time=Tue Apr 07 08:37:03 EEST 1998
+mentors_detail=[Ljava.lang.Object;@76ff6c19
+groups=[Ljava.lang.Object;@7b121a57
+cf_qa_whiteboard=
+platform=Sun
+mentors=[Ljava.lang.Object;@617f84e0
+flags=[Ljava.lang.Object;@7aecc021
+keywords=[Ljava.lang.Object;@4d39f593
+is_creator_accessible=true
+status=VERIFIED
+alias=firstBug
+is_cc_accessible=true
+severity=minor
+cf_last_resolved=Sat Dec 12 17:06:46 EET 1998
+blocks=[Ljava.lang.Object;@1829ad81
+url=
+product=MozillaClassic
+assigned_to=mcafee@gmail.com
+whiteboard=
+classification=Graveyard
+cc=[Ljava.lang.Object;@583dfc8b
+}
+see_also is Object[];
+depends_on is Object[];
+cc_detail is Object[];
+mentors is Object;
+mentors_detail is Object[];
+groups is Object[];
+flags is Object[];
+keywords is Object[];
+blocks is Object[];
+cc is Object[];

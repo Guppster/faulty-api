@@ -1,0 +1,60 @@
+{"bugs":
+[
+{
+"last_change_time":"Wed Dec 22 21:47:04 EET 2004",
+"summary":"Add a tabbed interface (MDI, multi-term, etherterm?)",
+"alias":"",
+"status":"RESOLVED",
+"is_open":false,
+"severity":"enhancement",
+"resolution":"FIXED",
+"assigned_to":"gnome-core-maint@gnome.bugs",
+"product":"gnome-core",
+"id":93,
+"component":"gnome-terminal",
+"priority":"Normal",
+"internals":
+{,
+"delta_ts":"2004-12-22 21:47:04",
+"cclist_accessible":1,
+"product_id":13,
+"everconfirmed":1,
+"resolution":"FIXED",
+"bug_id":93,
+"_multi_selects":[],
+"cf_gnome_target":"---",
+"version":"1.0.5x",
+"creation_ts":"1999.02.07 20:20",
+"op_sys":"other",
+"component_id":85,
+"component":"gnome-terminal",
+"reporter_accessible":1,
+"priority":"Normal",
+"qa_contact":60,
+"bug_status":"RESOLVED",
+"status":
+{
+"id":6,
+"sortkey":600,
+"is_open":0,
+"value":"RESOLVED"
+},
+"bug_file_loc":"",
+"short_desc":"Add a tabbed interface (MDI, multi-term, etherterm?)",
+"bug_severity":"enhancement",
+"cf_gnome_version":"---",
+"product":"gnome-core",
+"assigned_to":60,
+"status_whiteboard":"",
+"reporter_id":105718,
+"rep_platform":"Other"
+},
+"creation_time":"Sun Feb 07 20:20:00 EET 1999"
+}
+]
+}
+
+
+
+{"bugs":[{"id":61,"product":"gnome-media","assigned_to":"unknown@gnome.bugs","summary":"GTCD won't pull in the CD tray","last_change_time":"Wed Dec 22 21:47:04 EET 2004","component":"general","status":"RESOLVED","alias":"","priority":"Normal","internals":{"delta_ts":"2004-12-22 21:47:04","target_milestone":"---","cclist_accessible":1,"product_id":15,"everconfirmed":0,"resolution":"NOTABUG","bug_id":61,"cf_gnome_target":"---","_multi_selects":[],"version":"unspecified","creation_ts":"1999.02.05 01:35","op_sys":"other","component_id":55,"component":"general","reporter_accessible":1,"priority":"Normal","qa_contact":37,"bug_status":"RESOLVED","status":{"id":6,"sortkey":600,"value":"RESOLVED","is_open":0},"bug_file_loc":"","short_desc":"GTCD won't pull in the CD tray","bug_severity":"normal","cf_gnome_version":"---","assigned_to":37,"product":"gnome-media","reporter_id":82386,"status_whiteboard":"","rep_platform":"Other"},"is_open":false,"creation_time":"Fri Feb 05 01:35:00 EET 1999","severity":"normal","resolution":"NOTABUG"}]}
+{"bugs":[{"last_change_time":"Wed Dec 22 21:47:04 EET 2004","summary":"gnome-terminal should remember current working directory","alias":"","status":"RESOLVED","is_open":false,"severity":"enhancement","resolution":"NOTABUG","assigned_to":"gnome-core-maint@gnome.bugs","product":"gnome-core","id":942,"component":"gnome-terminal","priority":"Normal","internals":{,"delta_ts":"2004-12-22 21:47:04","cclist_accessible":1,"product_id":13,"everconfirmed":0,"resolution":"NOTABUG","bug_id":942,"_multi_selects":[],"cf_gnome_target":"---","version":"1.0.5x","creation_ts":"1999.04.09 20:20","op_sys":"other","component_id":85,"component":"gnome-terminal","reporter_accessible":1,"priority":"Normal","qa_contact":60,"bug_status":"RESOLVED","status":{"id":6,"sortkey":600,"is_open":0,"value":"RESOLVED"},"bug_file_loc":"","short_desc":"gnome-terminal should remember current working directory","bug_severity":"enhancement","cf_gnome_version":"---","product":"gnome-core","assigned_to":60,"status_whiteboard":"","reporter_id":20373,"rep_platform":"Other"},"creation_time":"Fri Apr 09 20:20:00 EEST 1999"}]}

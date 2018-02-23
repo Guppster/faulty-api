@@ -1,0 +1,26 @@
+Added certificate to keystore 'jssecacerts' using alias 'www.mozilla.org-2'
+1418323241392
+j: 0
+You must enter a valid bug number!
+j: 500
+j: 1000
+j: 1500
+j: 2000
+j: 2500
+[Fatal Error] :357:1: An invalid XML character (Unicode: 0xc) was found in the element content of the document.
+j: 3000
+j: 3500
+j: 4000
+j: 4500
+j: 5000
+j: 5500
+j: 6000
+j: 6500
+j: 7000
+j: 7500
+j: 8000
+j: 8500
+j: 9000
+j: 9500
+[Fatal Error] :4:53: An invalid XML character (Unicode: 0x2) was found in the element content of the document.
+2003938

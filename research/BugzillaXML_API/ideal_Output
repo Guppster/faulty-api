@@ -1,0 +1,148 @@
+{"bugs":
+[
+{
+"target_milestone":"---",
+"summary":"Navigator does not free preference hash table when exit.",
+"last_change_time":"2013-11-20T02:16:47Z",
+"see_also":[],
+"is_confirmed":true,
+"is_open":false,
+"assigned_to_detail":{"id":1672,"email":"mcafee@gmail.com","name":"mcafee@gmail.com","real_name":"Chris McAfee"},
+"cf_fx_points":"---",
+"cf_fx_iteration":"---",
+"resolution":"WONTFIX",
+"depends_on":[],
+"version":"1998-03-31",
+"cc_detail":[{"id":475800,"email":"hchang@mozilla.com","name":"hchang@mozilla.com","real_name":"Henry Chang [:henry]"},{"id":463956,"email":"rexyrexy2@gmail.com","name":"rexyrexy2@gmail.com","real_name":""},{"id":356256,"email":"tymerkaev@gmail.com","name":"tymerkaev@gmail.com","real_name":""},{"id":68465,"email":"wlevine@gmail.com","name":"wlevine@gmail.com","real_name":"Will Levine"}],
+"creator":"weitsang@cs.cornell.edu",
+"id":35,
+"op_sys":"Solaris",
+"creator_detail":{"id":55,"email":"weitsang@cs.cornell.edu","name":"weitsang@cs.cornell.edu","real_name":""},
+"component":"XFE",
+"cf_user_story":"",
+"priority":"P3",
+"creation_time":"1998-04-07T08:37:03Z",
+"qa_contact":"",
+"mentors_detail":[],
+"cf_qa_whiteboard":"",
+"groups":[],
+"platform":"Sun",
+"mentors":[],
+"flags":[],
+"keywords":[],
+"is_creator_accessible":true,
+"status":"VERIFIED",
+"alias":"firstBug",
+"is_cc_accessible":true,
+"severity":"minor",
+"cf_last_resolved":"1998-12-12T17:06:46Z",
+"dupe_of":null,
+"blocks":[],
+"url":"",
+"product":"MozillaClassic",
+"assigned_to":"mcafee@gmail.com",
+"whiteboard":"",
+"classification":"Graveyard",
+"update_token":"1414198712-5e210015a2c275ce17a8cc95a0b542dc",
+"cc":["hchang@mozilla.com","rexyrexy2@gmail.com","tymerkaev@gmail.com","wlevine@gmail.com"]
+}
+]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class java.lang.String
+class java.lang.String
+class [Ljava.lang.Object;
+class java.util.Date
+class java.lang.String
+class java.lang.Boolean
+class java.lang.Boolean
+class java.lang.String
+class [Ljava.lang.Object;
+class java.lang.String
+class java.lang.String
+class java.lang.Integer
+class java.lang.String
+class java.lang.String
+class java.lang.String
+class java.lang.String
+class java.lang.String
+class java.util.Date
+class [Ljava.lang.Object;
+class java.lang.String
+class [Ljava.lang.Object;
+class [Ljava.lang.Object;
+class java.lang.String
+class java.lang.Boolean
+class java.lang.Boolean
+class java.lang.String
+class [Ljava.lang.Object;
+class java.lang.String
+class java.lang.String
+class java.lang.String
+class java.lang.String
+class java.lang.String
+class [Ljava.lang.Object;
+class java.lang.String
+class java.lang.String
+class [Ljava.lang.Object;
+class java.util.Date
+class java.lang.Boolean
+class java.lang.Boolean
+class java.util.HashMap
+class java.lang.String
+class java.lang.String
+class java.lang.String
+class [Ljava.lang.Object;
+class java.lang.String
+class [Ljava.lang.Object;
+class java.lang.String
+class java.lang.Integer
+class java.lang.String
+class java.util.HashMap
+class java.lang.String
+class java.lang.String
+class java.lang.String
+class java.lang.String
+class java.util.Date
+class [Ljava.lang.Object;
+class [Ljava.lang.Object;
+class java.lang.String
+class java.lang.String
+class [Ljava.lang.Object;
+class [Ljava.lang.Object;
+class [Ljava.lang.Object;
+class java.lang.Boolean
+class java.lang.String
+class java.lang.Boolean
+class java.lang.String
+class java.util.Date
+class [Ljava.lang.Object;
+class java.lang.String
+class java.lang.String
+class java.lang.String
+class java.lang.String
+class java.lang.String
+class [Ljava.lang.Object;
