@@ -18,7 +18,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 		name = "Body Header";
 	}
 
-	public void execute ()
+	public void execute()
 	{
 		Vector vModified = new Vector();//will contain nodes which were moved
 		Vector vTree = allNodes(root);
