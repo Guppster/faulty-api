@@ -93,8 +93,7 @@ public class OrphanAdoption extends Pattern{
 						// if parent is orphan or root, do nothing
 						if (nparent.getName().equalsIgnoreCase(ncurr.getName()) || nparent.getName().equalsIgnoreCase("ROOT"))
 						{
-							;
-						}
+                        }
 						// IO.put("\nParent of target of orphan " + ncurr.getName() +
 						// " is Root or the orphan itself.\n");
 						else
@@ -290,8 +289,7 @@ public class OrphanAdoption extends Pattern{
 						// if parent is orphan or root, do nothing
 						if (nparent.getName().equalsIgnoreCase(ncurr.getName()) || nparent.getName().equalsIgnoreCase("ROOT"))
 						{
-							;
-						}
+                        }
 						else
 						{
 							boolean stop = false;

@@ -43,22 +43,32 @@ public class Main
 
     private void run()
     {
-        try
+        //Prompt for the name of he folder that holds the rsf files
+        try (BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in)))
         {
-            BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
             System.out.println("productName : ");
             productName = consoleReader.readLine();
+            consoleReader.close();
         }
-        catch (IOException ioe)
+        catch (IOException e)
         {
-            System.out.println(ioe.getMessage());
+            e.printStackTrace();
         }
 
+        //Grenerate rsf representation
         fileRsfMaker = new FileRsfMaker(productName);
         fileRsfMaker.doLift();
+
+        //Allows reading of the rsf representation
         inputReader = new InputReader(productName, fileRsfMaker.getRsfRepresentation());
+
+        //Find the cluster from the fliename
         fileNames2Cluster.putAll(inputReader.getFileNames2Clusters());
+
+        //Find the file from the cluster
         clusterName2FileName.putAll(inputReader.getClusterName2FileName());
+
+        //Relations we don't want to analyze
         unusedRelations.add("macrodefinition");
         unusedRelations.add("methodbelongstoclass");
         unusedRelations.add("declaredin");
@@ -75,9 +85,45 @@ public class Main
         while (prepareNextReport())
         {
             System.out.println("------------------------------------------------------------------------------------------------------------------------");
-            System.out.println("************************************************************************************************************************");
-            System.out.println("------------------------------------------------------------------------------------------------------------------------");
         }
+    }
+
+    private boolean prepareNextReport()
+    {
+        clearSets();
+
+        //Check if another report exists, if not exit
+        if (!inputReader.nextReport())
+        {
+            return false;
+        }
+
+        //answer is now the intersect of answer and fileRsfMaker entity names
+        //Making sure the tokens are an rsf entity
+        answer.retainAll(fileRsfMaker.getEntityNameToFileNames().keySet());
+
+        answer = inputReader.getAnswer();
+
+        lsaTokens = inputReader.getLsaTokens();
+
+        //lsaTokens is now the intersect of lsaTokens and fileRsfMaker entity names
+        //Making sure the tokens are an rsf entity
+        lsaTokens.retainAll(fileRsfMaker.getEntityNameToFileNames().keySet());
+
+        inputTokens = inputReader.getInputTokens();
+
+        //inputTokens is now the intersect of inputTokens and fileRsfMaker entity names
+        //Making sure the tokens are an rsf entity
+        inputTokens.retainAll(fileRsfMaker.getEntityNameToFileNames().keySet());
+
+        currentFileName = inputReader.getFilename();
+
+        reverseAllFileRelations();
+        constructSolutionSpace();
+        performRanking();
+
+        //Indicate that there may be more bug reports to process
+        return true;
     }
 
     private void constructSolutionSpace()
@@ -105,36 +151,6 @@ public class Main
             fileInputTokens.addAll(entityNameToFileNames.get(s));
             fileInputTokens.retainAll(fileRsfMaker.getAllRelations().get("filebelongstomodule").keySet());
         }
-    }
-
-    private boolean prepareNextReport()
-    {
-        clearSets();
-
-        if (!inputReader.nextReport())
-        {
-            return false;
-        }
-
-        answer.retainAll(fileRsfMaker.getEntityNameToFileNames().keySet());
-
-        answer = inputReader.getAnswer();
-
-        lsaTokens = inputReader.getLsaTokens();
-
-        lsaTokens.retainAll(fileRsfMaker.getEntityNameToFileNames().keySet());
-
-        inputTokens = inputReader.getInputTokens();
-
-        inputTokens.retainAll(fileRsfMaker.getEntityNameToFileNames().keySet());
-
-        currentFileName = inputReader.getFilename();
-
-        reverseAllFileRelations();
-        constructSolutionSpace();
-        performRanking();
-
-        return true;
     }
 
     @SuppressWarnings("unused")
@@ -1559,6 +1575,9 @@ public class Main
         return sortedMap;
     }
 
+    /**
+     * Clears answer, input, and lsa token sets
+     */
     private void clearSets()
     {
         answer.clear();
