@@ -508,10 +508,7 @@ public class RsfRepresentation{
 	public boolean isEntity(String s){
 		if (allEntityNames == null)
 			makeAllEntities();
-		if (allEntityNames.contains(s))
-			return true;
-		else
-			return false;
+        return allEntityNames.contains(s);
 	}
 
 	public Map<String, Map<String, Set<String>>> getRelationEntityEntitiesMap(){

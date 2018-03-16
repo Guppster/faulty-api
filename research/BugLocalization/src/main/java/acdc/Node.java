@@ -43,11 +43,8 @@ public class Node
     
     public boolean isCluster()
     {
-		if (type.equalsIgnoreCase("cModule") || type.equalsIgnoreCase("Subsystem") ||
-			type.equalsIgnoreCase("cSubSystem") || type.equalsIgnoreCase("UnknownContainer"))
-			return true;
-		else 
-			return false;			
+        return type.equalsIgnoreCase("cModule") || type.equalsIgnoreCase("Subsystem") ||
+               type.equalsIgnoreCase("cSubSystem") || type.equalsIgnoreCase("UnknownContainer");
     }
     
     public void print()
@@ -165,10 +162,8 @@ public class Node
      * @return true if this node is a file
      */
 	public boolean isFile()
-	{ 
-		if ((type.equals("cFile")) || (type.equals("Unknown")) || (type.equals("File")))
-			return true;
-		else return false;
+	{
+        return (type.equals("cFile")) || (type.equals("Unknown")) || (type.equals("File"));
 	}
 
      /**

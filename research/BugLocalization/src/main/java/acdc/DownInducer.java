@@ -18,7 +18,7 @@ public class DownInducer extends Pattern
 		while (iv.hasNext())
 		{
 			Node parent = (Node) iv.next();
-			DefaultMutableTreeNode tparent = (DefaultMutableTreeNode) parent.getTreeNode();
+			DefaultMutableTreeNode tparent = parent.getTreeNode();
 			if (parent.isCluster())
 			{
 				Vector subTree = nodeChildren(tparent);
@@ -31,7 +31,7 @@ public class DownInducer extends Pattern
 					Node child = (Node) is.next();
 					if (child.isFile())
 					{
-						DefaultMutableTreeNode tchild = (DefaultMutableTreeNode) child.getTreeNode();
+						DefaultMutableTreeNode tchild = child.getTreeNode();
 						tchild.removeAllChildren();
 						tparent.add(tchild);
 						hasChildrenFiles = true;

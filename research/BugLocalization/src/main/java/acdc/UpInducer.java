@@ -18,7 +18,7 @@ public class UpInducer extends Pattern
 		while (iv.hasNext())
 		{
 			Node parent = (Node) iv.next();
-			DefaultMutableTreeNode tparent = (DefaultMutableTreeNode) parent.getTreeNode();
+			DefaultMutableTreeNode tparent = parent.getTreeNode();
 			Vector subTree = allNodes(tparent);
 			tparent.removeAllChildren();
 			Iterator is = subTree.iterator();
@@ -27,7 +27,7 @@ public class UpInducer extends Pattern
 				Node child = (Node) is.next();
 				if (child.isFile())
 				{
-					DefaultMutableTreeNode tchild = (DefaultMutableTreeNode) child.getTreeNode();
+					DefaultMutableTreeNode tchild = child.getTreeNode();
 					tchild.removeAllChildren();
 					tparent.add(tchild);
 				}

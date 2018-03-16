@@ -28,7 +28,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
     	for (int i=0; i<vTree.size(); i++)
 		{
 			Node ncurr = (Node)vTree.elementAt(i);
-			DefaultMutableTreeNode curr = (DefaultMutableTreeNode)ncurr.getTreeNode();
+			DefaultMutableTreeNode curr = ncurr.getTreeNode();
                               			
       		if (ncurr.isFile())
 			{
@@ -52,11 +52,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 						{	
 							Node vnode = (Node)vTree.get(j);
 							IO.put("\tConsidering other file: " + vnode.getName(),2);
-							DefaultMutableTreeNode vtnode = (DefaultMutableTreeNode)vnode.getTreeNode();							
+							DefaultMutableTreeNode vtnode = vnode.getTreeNode();
 							if((ncurr.getName().endsWith(".c")))
 							{
-							    toFind = ncurr.getName().substring(0, ncurr.getName().length()-2) + ".h";;
-							}
+							    toFind = ncurr.getName().substring(0, ncurr.getName().length()-2) + ".h";
+                            }
 							else if((ncurr.getName().endsWith(".h")))
 							    toFind = ncurr.getName().substring(0, ncurr.getName().length()-2) + ".c";
 							
@@ -84,16 +84,16 @@ import javax.swing.tree.DefaultMutableTreeNode;
 							        while(evt.hasMoreElements())
 							        {
 		    						    DefaultMutableTreeNode ec = (DefaultMutableTreeNode)evt.nextElement();
-								    if(!vModified.contains((Node)ec.getUserObject()))
-									vModified.add((Node)ec.getUserObject());
+								    if(!vModified.contains(ec.getUserObject()))
+									vModified.add(ec.getUserObject());
 							        }
 		    
 							        Enumeration ecurr= curr.breadthFirstEnumeration();
 							        while(ecurr.hasMoreElements())
 							        {
 		    						    DefaultMutableTreeNode em = (DefaultMutableTreeNode)ecurr.nextElement();
-								    if(!vModified.contains((Node)em.getUserObject()))
-								    	vModified.add((Node)em.getUserObject());
+								    if(!vModified.contains(em.getUserObject()))
+								    	vModified.add(em.getUserObject());
 							        }
 		   						
 								//remove the files with extension .c and .h from the vector

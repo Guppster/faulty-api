@@ -44,7 +44,7 @@ public class SubGraph extends Pattern {
 			Node ncurr = (Node) ivRC.next();
 			setOfTargets = new HashSet(); //reset
 
-			setOfTargets.add((DefaultMutableTreeNode) ncurr.getTreeNode());
+			setOfTargets.add(ncurr.getTreeNode());
 			setOfTargets = findTargets(setOfTargets, vRootChildren);
 
 			counter = 0; //reset
@@ -105,13 +105,10 @@ public class SubGraph extends Pattern {
 				Sortable s_after = (Sortable) my_array.get(next_index++);
 				tentativeDominator = (Node) s_after.getObject();
 				//while hashtable doesn't contain it, skip over current node to the next one
-				if (ht.containsKey(tentativeDominator))
-					found = true;
-				else
-					found = false;
+                found = ht.containsKey(tentativeDominator);
 			} while (!found);
 
-			DefaultMutableTreeNode tentativeDominatorTreeNode = (DefaultMutableTreeNode) (tentativeDominator.getTreeNode());
+			DefaultMutableTreeNode tentativeDominatorTreeNode = tentativeDominator.getTreeNode();
 
 			IO.put("**************************", 2);
 			IO.put("Dominator " + tentativeDominator, 2);
@@ -218,8 +215,8 @@ public class SubGraph extends Pattern {
 
 						DefaultMutableTreeNode em =
 							(DefaultMutableTreeNode) ecurr.nextElement();
-						if (!vModified.contains((Node) em.getUserObject()))
-							vModified.add((Node) em.getUserObject());
+						if (!vModified.contains(em.getUserObject()))
+							vModified.add(em.getUserObject());
 					}
 
 					IO.put(" Moved:\t" + ((Node) (nextToMove.getUserObject())).getName(), 2);

@@ -55,7 +55,7 @@ public class OrphanAdoption extends Pattern{
 
 		for (int j = 0; j < vRootChildren.size(); j++) {
 			Node ncurr = (Node) vRootChildren.elementAt(j);
-			DefaultMutableTreeNode curr = (DefaultMutableTreeNode) ncurr.getTreeNode();
+			DefaultMutableTreeNode curr = ncurr.getTreeNode();
 
 			if (!ncurr.isCluster()) {
 				ht = new Hashtable(10000);
@@ -69,7 +69,7 @@ public class OrphanAdoption extends Pattern{
 				Iterator itargets = targets.iterator();
 				while (itargets.hasNext()) {
 					Node ncurr_target = (Node) (itargets.next());
-					DefaultMutableTreeNode curr_target = (DefaultMutableTreeNode) (ncurr_target.getTreeNode());
+					DefaultMutableTreeNode curr_target = ncurr_target.getTreeNode();
 
 					double counter = 0;
 
@@ -195,14 +195,14 @@ public class OrphanAdoption extends Pattern{
 
 					}
 
-					DefaultMutableTreeNode max = (DefaultMutableTreeNode) (max_key.getTreeNode());
+					DefaultMutableTreeNode max = max_key.getTreeNode();
 					max.add(curr);
 
 					Enumeration emax = curr.breadthFirstEnumeration();
 					while (emax.hasMoreElements()) {
 						DefaultMutableTreeNode ec = (DefaultMutableTreeNode) emax.nextElement();
-						if (!vReturn.contains((Node) ec.getUserObject()))
-							vReturn.add((Node) ec.getUserObject());
+						if (!vReturn.contains(ec.getUserObject()))
+							vReturn.add(ec.getUserObject());
 					}
 
 					IO.put("\twas adopted by ***\t" + max_key.getName(), 2);
@@ -237,7 +237,7 @@ public class OrphanAdoption extends Pattern{
 
 		for (int j = 0; j < vRootChildren.size(); j++) {
 			Node ncurr = (Node) vRootChildren.elementAt(j);
-			DefaultMutableTreeNode curr = (DefaultMutableTreeNode) ncurr.getTreeNode();
+			DefaultMutableTreeNode curr = ncurr.getTreeNode();
 
 			if (!ncurr.isCluster()) {
 				// begin with an empty hashtable for each orphan
@@ -255,7 +255,7 @@ public class OrphanAdoption extends Pattern{
 				while (isources.hasNext()) {
 					Node ncurr_source = (Node) (isources.next());
 					// IO.put("\tSource =: " +ncurr_source.getName());
-					DefaultMutableTreeNode curr_source = (DefaultMutableTreeNode) (ncurr_source.getTreeNode());
+					DefaultMutableTreeNode curr_source = ncurr_source.getTreeNode();
 
 					double counter = 0;
 
@@ -376,13 +376,13 @@ public class OrphanAdoption extends Pattern{
 
 					}
 
-					DefaultMutableTreeNode max = (DefaultMutableTreeNode) (max_key.getTreeNode());
+					DefaultMutableTreeNode max = max_key.getTreeNode();
 					max.add(curr);
 					Enumeration emax = curr.breadthFirstEnumeration();
 					while (emax.hasMoreElements()) {
 						DefaultMutableTreeNode ec = (DefaultMutableTreeNode) emax.nextElement();
-						if (!vReturn.contains((Node) ec.getUserObject()))
-							vReturn.add((Node) ec.getUserObject());
+						if (!vReturn.contains(ec.getUserObject()))
+							vReturn.add(ec.getUserObject());
 					}
 
 					IO.put("\twas adopted by ***\t" + max_key.getName(), 2);

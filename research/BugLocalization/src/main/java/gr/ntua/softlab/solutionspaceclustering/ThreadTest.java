@@ -40,9 +40,9 @@ public class ThreadTest{
 			ACDC.main(args);
 			// }
 		}
-	};
+	}
 
-	public static void main(String[] args){
+    public static void main(String[] args){
 		// *** CLUSTERING OF COMPLETE SYSTEM ***//
 		// SolutionClustering();
 

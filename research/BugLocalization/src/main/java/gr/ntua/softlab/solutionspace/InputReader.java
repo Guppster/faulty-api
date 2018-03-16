@@ -26,9 +26,9 @@ public class InputReader{
 	private int i = -1;
 	private String filename;
 	private ArrayList<String> lsaTokens;
-	private Set<String> answer = new HashSet<String>();;
-	private Set<String> inputTokens = new HashSet<String>();;
-	private Map<String, String> fileName2Cluster;
+	private Set<String> answer = new HashSet<String>();
+    private Set<String> inputTokens = new HashSet<String>();
+    private Map<String, String> fileName2Cluster;
 	private Map<String, Set<String>> clusterName2fileName;
 
 	public InputReader(String productName, RsfRepresentation rsfRepresentation){

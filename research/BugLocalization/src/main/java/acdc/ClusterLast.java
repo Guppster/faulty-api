@@ -34,7 +34,7 @@ public class ClusterLast extends Pattern {
 				// Change this to an iterator
 				//for (int i = 0; i < orphanNumber(); i++) {
 				//Node ncurr = (Node) orphans().elementAt(i);
-				DefaultMutableTreeNode curr = (DefaultMutableTreeNode) (ncurr.getTreeNode());
+				DefaultMutableTreeNode curr = ncurr.getTreeNode();
 
 				if (!ncurr.isCluster())
 				{
