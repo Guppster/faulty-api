@@ -13,25 +13,23 @@ public class UpInducer extends Pattern
 	{
 		// Remove intermediate clusters from the tree
 		Vector rootChildren = nodeChildren(root);
-		Iterator iv = rootChildren.iterator();
-		
-		while (iv.hasNext())
-		{
-			Node parent = (Node) iv.next();
-			DefaultMutableTreeNode tparent = parent.getTreeNode();
-			Vector subTree = allNodes(tparent);
-			tparent.removeAllChildren();
-			Iterator is = subTree.iterator();
-			while (is.hasNext())
-			{
-				Node child = (Node) is.next();
-				if (child.isFile())
-				{
-					DefaultMutableTreeNode tchild = child.getTreeNode();
-					tchild.removeAllChildren();
-					tparent.add(tchild);
-				}
-			}
-		}
+
+        for (Object aRootChildren : rootChildren)
+        {
+            Node parent = (Node) aRootChildren;
+            DefaultMutableTreeNode tparent = parent.getTreeNode();
+            Vector subTree = allNodes(tparent);
+            tparent.removeAllChildren();
+            for (Object aSubTree : subTree)
+            {
+                Node child = (Node) aSubTree;
+                if (child.isFile())
+                {
+                    DefaultMutableTreeNode tchild = child.getTreeNode();
+                    tchild.removeAllChildren();
+                    tparent.add(tchild);
+                }
+            }
+        }
 	}
 }

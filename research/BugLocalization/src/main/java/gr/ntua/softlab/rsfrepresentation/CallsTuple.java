@@ -7,9 +7,9 @@ package gr.ntua.softlab.rsfrepresentation;
  * @author or10n
  *
  */
-public class CallsTuple{
-	String caller;
-	String callee;
+class CallsTuple{
+	private final String caller;
+	private final String callee;
 	CallsTuple(String caller, String callee){
 		this.caller = caller;
 		this.callee = callee;

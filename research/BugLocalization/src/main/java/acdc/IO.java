@@ -12,8 +12,8 @@ package acdc;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class IO {
-  static int debug_level;
+class IO {
+  private static int debug_level;
   static void put(String message, int level)
   {
   	if (level <= debug_level) System.out.println(message);

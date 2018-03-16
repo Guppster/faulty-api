@@ -19,20 +19,20 @@ public class Main
     private Set<String> lsaTokens = new HashSet<>();
     private Set<String> inputTokens = new HashSet<>();
     private Set<String> fileLsaTokens = new HashSet<>();
-    private Map<String, String> fileNames2Cluster = new HashMap<>();
-    private Map<String, Set<String>> clusterName2FileName = new HashMap<>();
-    private Set<String> clique = new HashSet<>();
-    private Set<String> unusedRelations = new HashSet<>();
-    private Set<String> bad = new HashSet<>();
+    private final Map<String, String> fileNames2Cluster = new HashMap<>();
+    private final Map<String, Set<String>> clusterName2FileName = new HashMap<>();
+    private final Set<String> clique = new HashSet<>();
+    private final Set<String> unusedRelations = new HashSet<>();
+    private final Set<String> bad = new HashSet<>();
     private Map<String, Map<String, Set<String>>> allFileRelationsReversed;
-    private Map<String, Double> averagePerFileCon = new HashMap<>();
-    private Map<String, Double> averageToCliqueCon = new HashMap<>();
+    private final Map<String, Double> averagePerFileCon = new HashMap<>();
+    private final Map<String, Double> averageToCliqueCon = new HashMap<>();
     private Map<String, Double> fileToCliqueClusterConnectivity = new HashMap<>();
     private Map<String, Double> fileToCliqueConnectivity = new HashMap<>();
     private String currentFileName = "";
     private Map<String, Set<String>> solutionClusterName2FileName;
     private Map<String, String> solutionFileName2ClusterName;
-    private Set<String> finalV = new HashSet<>();
+    private final Set<String> finalV = new HashSet<>();
     private Set<String> fileInputTokens;
 
     public static void main(String[] args)
@@ -98,7 +98,7 @@ public class Main
         }
 
         // Make fileInputTokens and remove the GoldStandard
-        fileInputTokens = new HashSet<String>();
+        fileInputTokens = new HashSet<>();
 
         for (String s : inputTokens)
         {
@@ -554,15 +554,15 @@ public class Main
 
             for (Entry<String, Set<String>> finalSelectedCluster : top50PercentileClusters.entrySet())
             {
-                ZeroWriter.write(String.format("------------------------------______________________________---------------------------\n"));
+                ZeroWriter.write("------------------------------______________________________---------------------------\n");
 
                 System.out.println("------------------------------______________________________---------------------------");
 
-                ZeroWriter.write(String.format(finalSelectedCluster.getKey() + "\n"));
+                ZeroWriter.write(finalSelectedCluster.getKey() + "\n");
 
                 System.out.println(finalSelectedCluster.getKey());
 
-                ZeroWriter.write(String.format("....................................................................\n"));
+                ZeroWriter.write("....................................................................\n");
 
                 System.out.println("....................................................................");
 
@@ -584,7 +584,7 @@ public class Main
                         }
                     }
                 }
-                ZeroWriter.write(String.format("______________________________------------------------------___________________________\n"));
+                ZeroWriter.write("______________________________------------------------------___________________________\n");
                 System.out.println("______________________________------------------------------___________________________");
             }
             ZeroWriter.close();
@@ -726,9 +726,8 @@ public class Main
         Map<String, Map<String, Integer>> perClusterCliqueConnectivity = new HashMap<>();
         Map<String, Set<String>> allSplitClusters = new HashMap<>();
         Set<String> cliqueCluster = new HashSet<>();
-        Map<String, Map<String, Set<String>>> fileRsfIn = new HashMap<>();
+        Map<String, Map<String, Set<String>>> fileRsfIn = new HashMap<>(fileRsfMaker.getAllFileRelations());
 
-        fileRsfIn.putAll(fileRsfMaker.getAllFileRelations());
         for (String relName : unusedRelations)
         {
             fileRsfIn.remove(relName);
@@ -744,7 +743,7 @@ public class Main
             Map<String, Integer> clusterSpecificConnectivity = new HashMap<>();
             for (String fileName : solutionClusterName2FileName.get(s))
             {
-                clusterSpecificConnectivity.put(fileName, new Integer(0));
+                clusterSpecificConnectivity.put(fileName, 0);
             }
             perClusterCliqueConnectivity.put(s, clusterSpecificConnectivity);
         }
@@ -833,7 +832,7 @@ public class Main
                 orphansToClustersConnections.put(orphanName, new HashMap<>());
                 for (String splitCluster : clusterToSmallerClusters.get(clusterName).keySet())
                 {
-                    orphansToClustersConnections.get(orphanName).put(splitCluster, new Integer(0));
+                    orphansToClustersConnections.get(orphanName).put(splitCluster, 0);
                 }
             }
         }
@@ -881,7 +880,7 @@ public class Main
         {
             for (String targetCluster : fileConnections.getValue().keySet())
             {
-                if (allSplitClusters.get(targetCluster).size() < 1 * maxClusterSize)
+                if (allSplitClusters.get(targetCluster).size() < maxClusterSize)
                 {
                     allSplitClusters.get(targetCluster).add(fileConnections.getKey());
                     break;
@@ -1221,7 +1220,7 @@ public class Main
         {
             fileRsfIn.remove(s);
         }
-        Set<String> cliqueCluster = new HashSet<String>();
+        Set<String> cliqueCluster = new HashSet<>();
         for (String s : clique)
         {
             cliqueCluster.add(solutionFileName2ClusterName.get(s));
@@ -1553,9 +1552,8 @@ public class Main
 
         // Convert sorted map back to a Map
         Map<String, Double> sortedMap = new LinkedHashMap<>();
-        for (Iterator<Map.Entry<String, Double>> it = list.iterator(); it.hasNext(); )
+        for (Entry<String, Double> entry : list)
         {
-            Map.Entry<String, Double> entry = it.next();
             sortedMap.put(entry.getKey(), entry.getValue());
         }
         return sortedMap;

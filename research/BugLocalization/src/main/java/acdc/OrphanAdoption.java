@@ -47,7 +47,7 @@ public class OrphanAdoption extends Pattern{
 		induceEdges(vModified, root);
 	}
 
-	public Vector oneRoundReverse(){
+	private Vector oneRoundReverse(){
 		Vector vReturn = new Vector();
 		Vector vRootChildren = nodeChildren(root);
 		// Keeps the cluster-nodes which are competing for this orphan
@@ -66,9 +66,9 @@ public class OrphanAdoption extends Pattern{
 				// if(targets.isEmpty())
 				// IO.put("orphan =:"+ncurr.getName()+" has NO TARGETS!");
 
-				Iterator itargets = targets.iterator();
-				while (itargets.hasNext()) {
-					Node ncurr_target = (Node) (itargets.next());
+				for (Object target : targets)
+				{
+					Node ncurr_target = (Node) (target);
 					DefaultMutableTreeNode curr_target = ncurr_target.getTreeNode();
 
 					double counter = 0;
@@ -80,7 +80,8 @@ public class OrphanAdoption extends Pattern{
 
 					// ignore root and its children as targets of the orphan;
 					// also ignore targets of the orphan which are clusters
-					if (curr_target.getLevel() > 1 && !ncurr_target.isCluster()) {
+					if (curr_target.getLevel() > 1 && !ncurr_target.isCluster())
+					{
 
 						// IO.put("Rorphan := "+ ncurr.getName() +":::::::::::::: target =: "
 						// +ncurr_target.getName());
@@ -91,24 +92,30 @@ public class OrphanAdoption extends Pattern{
 						// IO.put("::::::: whose parent is :=  ");
 						// if parent is orphan or root, do nothing
 						if (nparent.getName().equalsIgnoreCase(ncurr.getName()) || nparent.getName().equalsIgnoreCase("ROOT"))
+						{
 							;
+						}
 						// IO.put("\nParent of target of orphan " + ncurr.getName() +
 						// " is Root or the orphan itself.\n");
-						else {
+						else
+						{
 							boolean stop = false;
-							while (!stop && !nparent.isCluster()) {
+							while (!stop && !nparent.isCluster())
+							{
 								parent = (DefaultMutableTreeNode) parent.getParent();
 								nparent = (Node) parent.getUserObject();
 
 								// parent of the source is root or is the orphan
-								if (nparent.getName().equalsIgnoreCase(ncurr.getName()) || nparent.getName().equalsIgnoreCase("ROOT")) {
+								if (nparent.getName().equalsIgnoreCase(ncurr.getName()) || nparent.getName().equalsIgnoreCase("ROOT"))
+								{
 
 									stop = true;
 								}
 							}
 						}
 
-						if (nparent.isCluster()) {
+						if (nparent.isCluster())
+						{
 							// dvalues, ivalues, ivalue --> needed for printing only
 							// Collection dvalues;
 							// Vector ivalues;
@@ -117,18 +124,19 @@ public class OrphanAdoption extends Pattern{
 							// IO.put(nparent.getName());
 
 							// Case1: parent already in the hashtable
-							if (ht.containsKey(nparent)) {
+							if (ht.containsKey(nparent))
+							{
 								// counter value get incremented by one unit
 								Double i = (Double) ht.get(nparent);
 
 								// IO.put(", iCounter:= " + i);
 
-								counter = i.doubleValue();
+								counter = i;
 								counter++;
 								// remove source with old counter value from the hashtable
 								ht.remove(nparent);
 								// add the source back to the hashtable with the updated counter value
-								ht.put(nparent, new Double(counter));
+								ht.put(nparent, counter);
 
 								// IO.put(", fCounter not new:= "+ counter);
 
@@ -138,23 +146,26 @@ public class OrphanAdoption extends Pattern{
 								 * IO.put("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"); */
 							}
 							// Case2: parent was not in the hashtable
-							else {
+							else
+							{
 								counter = 0;
 
 								HashSet c_targets = new HashSet();
 								Enumeration ps = parent.breadthFirstEnumeration();
-								while (ps.hasMoreElements()) {
+								while (ps.hasMoreElements())
+								{
 									DefaultMutableTreeNode ps_curr = (DefaultMutableTreeNode) ps.nextElement();
 									Node nps_curr = (Node) ps_curr.getUserObject();
 									c_targets = nps_curr.getTargets();
-									if (c_targets.contains(ncurr)) {
+									if (c_targets.contains(ncurr))
+									{
 										counter = counter + 0.000001;
 										// IO.put(", Counter:= "+ counter);
 									}
 								}
 
 								// add parent to the hashtable with a counter value incremented by one more unit
-								ht.put(nparent, new Double(++counter));
+								ht.put(nparent, ++counter);
 								// IO.put(", Counter:= "+ counter);
 
 								/* IO.put("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"); dvalues = ht.values(); ivalues = new
@@ -188,8 +199,8 @@ public class OrphanAdoption extends Pattern{
 						Double curr_value = (Double) ht.get(curr_key);
 						// IO.put(", Value := " + curr_value.doubleValue());
 
-						if (curr_value.doubleValue() >= max_value) {
-							max_value = curr_value.doubleValue();
+						if (curr_value >= max_value) {
+							max_value = curr_value;
 							max_key = curr_key;
 						}
 
@@ -214,7 +225,7 @@ public class OrphanAdoption extends Pattern{
 		return vReturn;
 	}
 
-	public Vector manyRoundsForward(){
+	private Vector manyRoundsForward(){
 		Vector result = new Vector();
 		Vector vAdopted;
 		// Run oneRoundForward as many times as the #orphans is decreasing
@@ -227,7 +238,7 @@ public class OrphanAdoption extends Pattern{
 		return result;
 	}
 
-	public Vector oneRoundForward(){
+	private Vector oneRoundForward(){
 		Vector vReturn = new Vector();
 		// vector will contain the orphans adopted
 		Vector vRootChildren = nodeChildren(root);
@@ -249,11 +260,11 @@ public class OrphanAdoption extends Pattern{
 				// ncurr.printSources();
 				// if(sources.isEmpty())
 				// IO.put("orphan =:"+ncurr.getName()+" has NO SOURCES!");
-				Iterator isources = sources.iterator();
 				// iterate through the sources
 
-				while (isources.hasNext()) {
-					Node ncurr_source = (Node) (isources.next());
+				for (Object source : sources)
+				{
+					Node ncurr_source = (Node) (source);
 					// IO.put("\tSource =: " +ncurr_source.getName());
 					DefaultMutableTreeNode curr_source = ncurr_source.getTreeNode();
 
@@ -267,7 +278,8 @@ public class OrphanAdoption extends Pattern{
 					// ignore root and its children as sources of the orphan;
 
 					// --> we ignore sources of the orphan which are clusters
-					if (curr_source.getLevel() > 1 && !ncurr_source.isCluster()) {
+					if (curr_source.getLevel() > 1 && !ncurr_source.isCluster())
+					{
 						// IO.put("orphan := "+ ncurr.getName() +":::::::::::::: source =: " +ncurr_source.getName());
 
 						// the parent of this source is competing for the orphan
@@ -277,22 +289,28 @@ public class OrphanAdoption extends Pattern{
 
 						// if parent is orphan or root, do nothing
 						if (nparent.getName().equalsIgnoreCase(ncurr.getName()) || nparent.getName().equalsIgnoreCase("ROOT"))
+						{
 							;
-						else {
+						}
+						else
+						{
 							boolean stop = false;
-							while (!stop && !nparent.isCluster()) {
+							while (!stop && !nparent.isCluster())
+							{
 								parent = (DefaultMutableTreeNode) parent.getParent();
 								nparent = (Node) parent.getUserObject();
 
 								// parent of the source is root or is the orphan
-								if (nparent.getName().equalsIgnoreCase(ncurr.getName()) || nparent.getName().equalsIgnoreCase("ROOT")) {
+								if (nparent.getName().equalsIgnoreCase(ncurr.getName()) || nparent.getName().equalsIgnoreCase("ROOT"))
+								{
 
 									stop = true;
 								}
 							}
 						}
 
-						if (nparent.isCluster()) {
+						if (nparent.isCluster())
+						{
 							// dvalues, ivalues, ivalue --> needed for printing only
 							// Collection dvalues;
 							// Vector ivalues;
@@ -300,16 +318,17 @@ public class OrphanAdoption extends Pattern{
 
 							// IO.put(nparent.getName());
 							// Case1: parent already in the hashtable
-							if (ht.containsKey(nparent)) {
+							if (ht.containsKey(nparent))
+							{
 								// counter value get incremented by one unit
 								Double i = (Double) ht.get(nparent);
 								// IO.put(", iCounter:= " + i);
-								counter = i.doubleValue();
+								counter = i;
 								counter++;
 								// remove source with old counter value from the hashtable
 								ht.remove(nparent);
 								// add the source back to the hashtable with the updated counter value
-								ht.put(nparent, new Double(counter));
+								ht.put(nparent, counter);
 								// IO.put(", fCounter not new:= "+ counter);
 
 								/* IO.put("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"); dvalues = ht.values(); ivalues = new
@@ -318,24 +337,27 @@ public class OrphanAdoption extends Pattern{
 								 * IO.put("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"); */
 							}
 							// Case2: parent not in the hashtable
-							else {
+							else
+							{
 								counter = 0;
 								HashSet c_sources = new HashSet();
 								Enumeration ps = parent.breadthFirstEnumeration();
 								ps.nextElement();
 								// don't count the parent itself which surely points to curr due to edge induction
-								while (ps.hasMoreElements()) {
+								while (ps.hasMoreElements())
+								{
 									DefaultMutableTreeNode ps_curr = (DefaultMutableTreeNode) ps.nextElement();
 									Node nps_curr = (Node) ps_curr.getUserObject();
 									c_sources = nps_curr.getSources();
-									if (c_sources.contains(ncurr)) {
+									if (c_sources.contains(ncurr))
+									{
 										counter = counter + 0.000001;
 										// IO.put(", Counter:= "+ counter);
 									}
 								}
 
 								// add parent to the hashtable with a counter value incremented by one more unit
-								ht.put(nparent, new Double(++counter));
+								ht.put(nparent, ++counter);
 								// IO.put(", Counter:= "+ counter);
 
 								/* IO.put("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"); dvalues = ht.values(); ivalues = new
@@ -369,8 +391,8 @@ public class OrphanAdoption extends Pattern{
 
 						Double curr_value = (Double) ht.get(curr_key);
 						// IO.put(", Value := " + curr_value.doubleValue());
-						if (curr_value.doubleValue() >= max_value) {
-							max_value = curr_value.doubleValue();
+						if (curr_value >= max_value) {
+							max_value = curr_value;
 							max_key = curr_key;
 						}
 

@@ -14,7 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * Clusters the children of the root based on their dependencies
  */
 public class SubGraph extends Pattern {
-	private int clusterSize;
+	private final int clusterSize;
 
 	public SubGraph(DefaultMutableTreeNode _root, int size) {
 		super(_root);
@@ -38,10 +38,9 @@ public class SubGraph extends Pattern {
 
 		int counter = 0; // keeps track of #targets per node
 
-		Iterator ivRC = vRootChildren.iterator();
-		while (ivRC.hasNext())
+		for (Object aVRootChildren : vRootChildren)
 		{
-			Node ncurr = (Node) ivRC.next();
+			Node ncurr = (Node) aVRootChildren;
 			setOfTargets = new HashSet(); //reset
 
 			setOfTargets.add(ncurr.getTreeNode());
@@ -49,18 +48,19 @@ public class SubGraph extends Pattern {
 
 			counter = 0; //reset
 
-			Iterator ihs = setOfTargets.iterator();
 			//count only targets which are children of root
-			while (ihs.hasNext()) {
-				DefaultMutableTreeNode c = (DefaultMutableTreeNode) ihs.next();
+			for (Object setOfTarget : setOfTargets)
+			{
+				DefaultMutableTreeNode c = (DefaultMutableTreeNode) setOfTarget;
 				Node n = (Node) c.getUserObject();
 
-				if (vRootChildren.contains(n)) {
+				if (vRootChildren.contains(n))
+				{
 					//IO.put(n.getName()+" is in vRootChildren");
 					counter++;
 				}
 			}
-			ht.put(ncurr, new Integer(counter));
+			ht.put(ncurr, counter);
 		}
 
 		//sort ht in increasing order
@@ -78,19 +78,20 @@ public class SubGraph extends Pattern {
 		}
 		Collections.sort(my_array);
 
-		for (int i = 0; i < my_array.size(); i++) {
+        for (Object aMy_array : my_array)
+        {
 
-			Sortable s_print = (Sortable) my_array.get(i);
+            Sortable s_print = (Sortable) aMy_array;
 
-			Node object_key = (Node) s_print.getObject();
+            Node object_key = (Node) s_print.getObject();
 
-			Integer integer_object = (Integer) s_print.getKey();
+            Integer integer_object = (Integer) s_print.getKey();
 
-			IO.put("Node = " + object_key.getName()	+
-			       " , Type := "	+ object_key.getType() +
-			       " , Targets = " + integer_object, 2);
+            IO.put("Node = " + object_key.getName() +
+                   " , Type := " + object_key.getType() +
+                   " , Targets = " + integer_object, 2);
 
-		}
+        }
 
 		Node tentativeDominator;
 		int next_index = 0;
@@ -125,10 +126,9 @@ public class SubGraph extends Pattern {
 				Node ncurr_cS;
 				if (cS.size() < clusterSize)
 				{
-					Iterator ic = cS.iterator();
-					while (ic.hasNext())
+					for (Object c : cS)
 					{
-						curr_cS = (DefaultMutableTreeNode) ic.next();
+						curr_cS = (DefaultMutableTreeNode) c;
 						ncurr_cS = (Node) curr_cS.getUserObject();
 						//IO.put("Covered Set Node ***" + ncurr_cS.getName() + " ,Type := " +
 						// ncurr_cS.getType() + " was removed from hashtable!!!");
@@ -200,23 +200,28 @@ public class SubGraph extends Pattern {
 				}
 
 				//new node contains all the nodes in covered set and others too
-				Iterator intm = nodesToMove.iterator();
-				while (intm.hasNext()) {
+				for (Object aNodesToMove : nodesToMove)
+				{
 					DefaultMutableTreeNode nextToMove =
-						(DefaultMutableTreeNode) intm.next();
+							(DefaultMutableTreeNode) aNodesToMove;
 					if (!nextToMove.equals(ssTreeNode))
+					{
 						ssTreeNode.add(nextToMove);
+					}
 
 					//there are no outside sources for coveredSet nodes, threfore edgeInduction is only needed for the 
 					//newly created cluster node 
 
 					Enumeration ecurr = nextToMove.breadthFirstEnumeration();
-					while (ecurr.hasMoreElements()) {
+					while (ecurr.hasMoreElements())
+					{
 
 						DefaultMutableTreeNode em =
-							(DefaultMutableTreeNode) ecurr.nextElement();
+								(DefaultMutableTreeNode) ecurr.nextElement();
 						if (!vModified.contains(em.getUserObject()))
+						{
 							vModified.add(em.getUserObject());
+						}
 					}
 
 					IO.put(" Moved:\t" + ((Node) (nextToMove.getUserObject())).getName(), 2);
@@ -258,42 +263,42 @@ public class SubGraph extends Pattern {
 			"**************************************************************",
 			2);
 		HashSet cS = coveredSet(domin, vTree);
-		Iterator icS = cS.iterator();
-		while (icS.hasNext()) {
-			DefaultMutableTreeNode curr = (DefaultMutableTreeNode) icS.next();
+		for (Object c : cS)
+		{
+			DefaultMutableTreeNode curr = (DefaultMutableTreeNode) c;
 			Node ncurr = (Node) curr.getUserObject();
 			IO.put(
-				"\tCovered Set Node: **** "
+					"\tCovered Set Node: **** "
 					+ ncurr.getName()
 					+ " , Type := "
 					+ ncurr.getType(),
-				2);
+					2);
 		}
 
 		HashSet tS = findTargets(cS, vTree);
-		Iterator itS = tS.iterator();
-		while (itS.hasNext()) {
-			DefaultMutableTreeNode curr1 = (DefaultMutableTreeNode) itS.next();
+		for (Object t : tS)
+		{
+			DefaultMutableTreeNode curr1 = (DefaultMutableTreeNode) t;
 			Node ncurr1 = (Node) curr1.getUserObject();
 			IO.put(
-				"\t** Target of covered set:= "
+					"\t** Target of covered set:= "
 					+ ncurr1.getName()
 					+ " , Type := "
 					+ ncurr1.getType(),
-				2);
+					2);
 
 			HashSet sS = findSources(curr1, vTree);
-			Iterator isS = sS.iterator();
-			while (isS.hasNext()) {
+			for (Object s : sS)
+			{
 				DefaultMutableTreeNode curr2 =
-					(DefaultMutableTreeNode) isS.next();
+						(DefaultMutableTreeNode) s;
 				Node ncurr2 = (Node) curr2.getUserObject();
 				IO.put(
-					"\t\tIts source := "
+						"\t\tIts source := "
 						+ ncurr2.getName()
 						+ " , Type := "
 						+ ncurr2.getType(),
-					2);
+						2);
 			}
 		}
 	}
@@ -322,13 +327,15 @@ public class SubGraph extends Pattern {
 			do {
 				both = (HashSet) covered.clone();
 				both.addAll(result);
-				Iterator ic = covered.iterator();
-				while (ic.hasNext()) {
+				for (Object aCovered : covered)
+				{
 					DefaultMutableTreeNode curr =
-						(DefaultMutableTreeNode) ic.next();
+							(DefaultMutableTreeNode) aCovered;
 					fathers = findSources(curr, vTree);
 					if (!both.containsAll(fathers))
+					{
 						falseOnes.add(curr);
+					}
 				}
 
 			}
@@ -351,21 +358,21 @@ public class SubGraph extends Pattern {
 		HashSet allTargets = new HashSet();
 
 		//iterate thorough the passed HashSet    
-		Iterator iS = source.iterator();
-		while (iS.hasNext()) {
-			DefaultMutableTreeNode curr = (DefaultMutableTreeNode) iS.next();
+		for (Object aSource : source)
+		{
+			DefaultMutableTreeNode curr = (DefaultMutableTreeNode) aSource;
 			Node ncurr = (Node) curr.getUserObject();
 
 			//get the targets of the current node in the iteration      
 			HashSet targets = ncurr.getTargets();
 
 			//iterate through these targets adding each to the HashSet 'targets'
-			Iterator iT = targets.iterator();
-			while (iT.hasNext()) {
-				Node n = (Node) iT.next();
+			for (Object target : targets)
+			{
+				Node n = (Node) target;
 
 				if (vRootChildren.contains(n)) // was !vTree
-					{
+				{
 					DefaultMutableTreeNode t = n.getTreeNode();
 					allTargets.add(t);
 				}
@@ -387,11 +394,11 @@ public class SubGraph extends Pattern {
 
 		//iterate through the sources of the passed node
 		//and add them to the HashSet called 'sources'
-		Iterator iS = sources.iterator();
-		while (iS.hasNext()) {
-			Node n = (Node) iS.next();
+		for (Object source : sources)
+		{
+			Node n = (Node) source;
 			if (vRootChildren.contains(n))
-				{
+			{
 				DefaultMutableTreeNode t = n.getTreeNode();
 				allSources.add(t);
 			}

@@ -7,9 +7,9 @@ package gr.ntua.softlab.rsfrepresentation;
  * @author or10n
  *
  */
-public class DeclaredTuple {
-	String file;
-	String content;
+class DeclaredTuple {
+	private final String file;
+	private final String content;
 		DeclaredTuple(String file, String content){
 			this.file = file;
 			this.content = content;

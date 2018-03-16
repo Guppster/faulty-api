@@ -10,26 +10,26 @@ import java.util.Set;
 import edu.uci.ics.jung.algorithms.shortestpath.DijkstraShortestPath;
 import graph.creation.GraphRepresentation;
 
-public class DijkstraPaths{
+class DijkstraPaths{
 
-	DijkstraShortestPath<String, GraphRepresentation.MyLink> DSP;
-	String CenterOfAttention;
+	private final DijkstraShortestPath<String, GraphRepresentation.MyLink> DSP;
+	private final String CenterOfAttention;
 
 	public DijkstraPaths(GraphRepresentation GR, String CenterOfAttention){
-		DSP = new DijkstraShortestPath<String, GraphRepresentation.MyLink>(GR.getGraph());
+		DSP = new DijkstraShortestPath<>(GR.getGraph());
 		this.CenterOfAttention = CenterOfAttention;
 	}
 
 	public Map<String, List<String>> findShortestPaths(Set<String> ToConnect){
-		Set<List<GraphRepresentation.MyLink>> Paths = new HashSet<List<GraphRepresentation.MyLink>>();
+		Set<List<GraphRepresentation.MyLink>> Paths = new HashSet<>();
 		for (String s : ToConnect) {
 			Paths.add(DSP.getPath(CenterOfAttention, s));
 		}
-		Map<String, List<String>> ProductionRules = new HashMap<String, List<String>>();
+		Map<String, List<String>> ProductionRules = new HashMap<>();
 		for (List<GraphRepresentation.MyLink> MyLinkList : Paths) {
 			for (GraphRepresentation.MyLink ml : MyLinkList) {
 				if (!ProductionRules.containsKey(ml.To)) {
-					List<String> toInsert = new ArrayList<String>();
+					List<String> toInsert = new ArrayList<>();
 					toInsert.add(ml.Type);
 					ProductionRules.put(ml.To, toInsert);
 				} else {

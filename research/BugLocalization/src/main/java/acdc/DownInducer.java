@@ -13,36 +13,35 @@ public class DownInducer extends Pattern
 	{
 		// Remove all but fine-grain clusters from the tree	
 		Vector allNodes = allNodes(root);
-		Iterator iv = allNodes.iterator();
-		
-		while (iv.hasNext())
-		{
-			Node parent = (Node) iv.next();
-			DefaultMutableTreeNode tparent = parent.getTreeNode();
-			if (parent.isCluster())
-			{
-				Vector subTree = nodeChildren(tparent);
-				tparent.removeAllChildren();
-				tparent.removeFromParent();
-				Iterator is = subTree.iterator();
-				boolean hasChildrenFiles = false;
-				while (is.hasNext())
-				{
-					Node child = (Node) is.next();
-					if (child.isFile())
-					{
-						DefaultMutableTreeNode tchild = child.getTreeNode();
-						tchild.removeAllChildren();
-						tparent.add(tchild);
-						hasChildrenFiles = true;
-					}
-				}
-				if (hasChildrenFiles) root.add(tparent);
-			}
-			else
-			{
-				tparent.removeAllChildren();
-			}
-		}
+
+        for (Object allNode : allNodes)
+        {
+            Node parent = (Node) allNode;
+            DefaultMutableTreeNode tparent = parent.getTreeNode();
+            if (parent.isCluster())
+            {
+                Vector subTree = nodeChildren(tparent);
+                tparent.removeAllChildren();
+                tparent.removeFromParent();
+                Iterator is = subTree.iterator();
+                boolean hasChildrenFiles = false;
+                while (is.hasNext())
+                {
+                    Node child = (Node) is.next();
+                    if (child.isFile())
+                    {
+                        DefaultMutableTreeNode tchild = child.getTreeNode();
+                        tchild.removeAllChildren();
+                        tparent.add(tchild);
+                        hasChildrenFiles = true;
+                    }
+                }
+                if (hasChildrenFiles) root.add(tparent);
+            }
+            else
+            {
+                tparent.removeAllChildren();
+            }
+        }
 	}
 }

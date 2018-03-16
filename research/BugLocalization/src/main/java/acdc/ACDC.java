@@ -27,7 +27,7 @@ public class ACDC{
 	 * 
 	 * @param run_name
 	 */
-	static void err_AND_exit(String run_name){
+	private static void err_AND_exit(String run_name){
 		IO.put("USAGE: " + run_name + " <.ta or .rsf input file> <.rsf output file> [-/+patterns] [options]", 0);
 
 		IO.put("\nSupported patterns include:", 0);
@@ -84,17 +84,22 @@ public class ACDC{
 
 	public static void main(String[] args){
 		String run_name = "java acdc.ACDC";
-		for (int i = 0; i < args.length; i++) {
-			if (args[i].equals("-6431"))
-				run_name = "acdc";
-		}
+        for (String arg1 : args)
+        {
+            if (arg1.equals("-6431"))
+            {
+                run_name = "acdc";
+            }
+        }
 
 		// if one of the given args is "-h", print Help message, then exit
-		for (int u = 0; u < args.length; u++) {
-			if (args[u].equalsIgnoreCase("-h")) {
-				err_AND_exit(run_name);
-			}
-		}
+        for (String arg : args)
+        {
+            if (arg.equalsIgnoreCase("-h"))
+            {
+                err_AND_exit(run_name);
+            }
+        }
 
 		IO.set_debug_level(0);
 
@@ -259,9 +264,9 @@ public class ACDC{
 		Pattern.induceEdges(allNodes, root);
 
 		// Execute the patterns
-		Iterator iv = vpatterns.iterator();
-		while (iv.hasNext()) {
-			Pattern p = (Pattern) iv.next();
+		for (Object vpattern : vpatterns)
+		{
+			Pattern p = (Pattern) vpattern;
 			IO.put("Executing " + p.getName() + " pattern...", 1);
 			p.execute();
 		}

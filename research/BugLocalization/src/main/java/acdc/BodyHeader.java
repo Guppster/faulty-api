@@ -48,66 +48,72 @@ import javax.swing.tree.DefaultMutableTreeNode;
 						String toFind = "";
 						// Loop through the vector of remaining .h and .c 
 						// files to find counterpart file
-						for(int j = 0; j < vTree.size(); j++)
-						{	
-							Node vnode = (Node)vTree.get(j);
-							IO.put("\tConsidering other file: " + vnode.getName(),2);
-							DefaultMutableTreeNode vtnode = vnode.getTreeNode();
-							if((ncurr.getName().endsWith(".c")))
-							{
-							    toFind = ncurr.getName().substring(0, ncurr.getName().length()-2) + ".h";
+                        for (Object aVTree : vTree)
+                        {
+                            Node vnode = (Node) aVTree;
+                            IO.put("\tConsidering other file: " + vnode.getName(), 2);
+                            DefaultMutableTreeNode vtnode = vnode.getTreeNode();
+                            if ((ncurr.getName().endsWith(".c")))
+                            {
+                                toFind = ncurr.getName().substring(0, ncurr.getName().length() - 2) + ".h";
                             }
-							else if((ncurr.getName().endsWith(".h")))
-							    toFind = ncurr.getName().substring(0, ncurr.getName().length()-2) + ".c";
-							
-							if(vnode.getName().equalsIgnoreCase(toFind))
-							{	   
-								String filename = ncurr.getName().substring(0, ncurr.getName().length()-2);
-								//create the new cluster node which will have extension .ch
-								Node cluster_node = new Node(filename + ".ch", "cModule");
-								DefaultMutableTreeNode tcluster = new DefaultMutableTreeNode(cluster_node);
-								cluster_node.setTreeNode(tcluster);
-								
-								//add the new cluster node under the parent of the current node in the traversal
-								curr_parent.add(tcluster);
-								
-								//make the files with extension .c and .h children of the new cluster node
-								tcluster.add(curr);
-								tcluster.add(vtnode);
-								
-								IO.put("\tA cluster called " +
-									cluster_node.getName() + " was created containing " +
-                                    ncurr.getName() + ", " + vnode.getName(),2);
-								
-								
-		    					        Enumeration evt = vtnode.breadthFirstEnumeration();
-							        while(evt.hasMoreElements())
-							        {
-		    						    DefaultMutableTreeNode ec = (DefaultMutableTreeNode)evt.nextElement();
-								    if(!vModified.contains(ec.getUserObject()))
-									vModified.add(ec.getUserObject());
-							        }
-		    
-							        Enumeration ecurr= curr.breadthFirstEnumeration();
-							        while(ecurr.hasMoreElements())
-							        {
-		    						    DefaultMutableTreeNode em = (DefaultMutableTreeNode)ecurr.nextElement();
-								    if(!vModified.contains(em.getUserObject()))
-								    	vModified.add(em.getUserObject());
-							        }
-		   						
-								//remove the files with extension .c and .h from the vector
-								//vTree.removeElement(vnode);
-								//vTree.removeElement(ncurr);
-								//vTree.trimToSize();
-								break;				
-							}
-							else //no counterpart file was found in the vector
-							{
-							     //vTree.removeElement(ncurr);
-							     //vTree.trimToSize();
-							}
-						}// end for
+                            else if ((ncurr.getName().endsWith(".h")))
+                            {
+                                toFind = ncurr.getName().substring(0, ncurr.getName().length() - 2) + ".c";
+                            }
+
+                            if (vnode.getName().equalsIgnoreCase(toFind))
+                            {
+                                String filename = ncurr.getName().substring(0, ncurr.getName().length() - 2);
+                                //create the new cluster node which will have extension .ch
+                                Node cluster_node = new Node(filename + ".ch", "cModule");
+                                DefaultMutableTreeNode tcluster = new DefaultMutableTreeNode(cluster_node);
+                                cluster_node.setTreeNode(tcluster);
+
+                                //add the new cluster node under the parent of the current node in the traversal
+                                curr_parent.add(tcluster);
+
+                                //make the files with extension .c and .h children of the new cluster node
+                                tcluster.add(curr);
+                                tcluster.add(vtnode);
+
+                                IO.put("\tA cluster called " +
+                                       cluster_node.getName() + " was created containing " +
+                                       ncurr.getName() + ", " + vnode.getName(), 2);
+
+
+                                Enumeration evt = vtnode.breadthFirstEnumeration();
+                                while (evt.hasMoreElements())
+                                {
+                                    DefaultMutableTreeNode ec = (DefaultMutableTreeNode) evt.nextElement();
+                                    if (!vModified.contains(ec.getUserObject()))
+                                    {
+                                        vModified.add(ec.getUserObject());
+                                    }
+                                }
+
+                                Enumeration ecurr = curr.breadthFirstEnumeration();
+                                while (ecurr.hasMoreElements())
+                                {
+                                    DefaultMutableTreeNode em = (DefaultMutableTreeNode) ecurr.nextElement();
+                                    if (!vModified.contains(em.getUserObject()))
+                                    {
+                                        vModified.add(em.getUserObject());
+                                    }
+                                }
+
+                                //remove the files with extension .c and .h from the vector
+                                //vTree.removeElement(vnode);
+                                //vTree.removeElement(ncurr);
+                                //vTree.trimToSize();
+                                break;
+                            }
+                            else //no counterpart file was found in the vector
+                            {
+                                //vTree.removeElement(ncurr);
+                                //vTree.trimToSize();
+                            }
+                        }// end for
 
 					}//end else
       			}

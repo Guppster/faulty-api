@@ -33,18 +33,18 @@ import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 
 public class GraphRepresentation{
-	Graph<String, MyLink> The_Graph;
-	Map<String, Set<String>> Core_Entities;
+	private final Graph<String, MyLink> The_Graph;
+	private Map<String, Set<String>> Core_Entities;
 
 	private int edgeCount = 0;
 
 	public class MyLink{
-		public String Type;
-		public String From;
-		public String To;
-		int id;
+		public final String Type;
+		final String From;
+		public final String To;
+		final int id;
 
-		public MyLink(String Type, String From, String To){
+		MyLink(String Type, String From, String To){
 			this.id = edgeCount++; // This is defined in the outer class.
 			this.Type = Type;
 			this.From = From;
@@ -57,7 +57,7 @@ public class GraphRepresentation{
 	}
 
 	public GraphRepresentation(){
-		The_Graph = new UndirectedSparseMultigraph<String, MyLink>();
+		The_Graph = new UndirectedSparseMultigraph<>();
 		// The_Graph = new SparseMultigraph<String, MyLink>();
 	}
 
@@ -69,9 +69,7 @@ public class GraphRepresentation{
 		Collection<MyLink> EdgesFromVertex1 = The_Graph.getIncidentEdges(Vertex1);
 		Collection<MyLink> EdgesFromVertex2 = The_Graph.getIncidentEdges(Vertex2);
 		EdgesFromVertex1.retainAll(EdgesFromVertex2);
-		Set<MyLink> InBetween = new HashSet<MyLink>();
-		InBetween.addAll(EdgesFromVertex1);
-		return InBetween;
+		return new HashSet<>(EdgesFromVertex1);
 	}
 
 	public void insertEdge(String Relation, String From, String To){
@@ -80,10 +78,7 @@ public class GraphRepresentation{
 	}
 
 	public Set<MyLink> getEdges(String Vertex){
-		Set<MyLink> Edges = new HashSet<MyLink>();
-		for (MyLink ml : The_Graph.getIncidentEdges(Vertex))
-			Edges.add(ml);
-		return Edges;
+		return new HashSet<>(The_Graph.getIncidentEdges(Vertex));
 	}
 
 	public void addEdges(Set<MyLink> Edges){
@@ -102,29 +97,24 @@ public class GraphRepresentation{
 	}
 
 	public Set<String> getNeighbors(String Source){
-		Set<String> Neighbors = new HashSet<String>();
+		Set<String> Neighbors = new HashSet<>();
 
 		if (The_Graph.containsVertex(Source) && !The_Graph.getNeighbors(Source).isEmpty())
-			for (String s : The_Graph.getNeighbors(Source)) {
-				Neighbors.add(s);
-			}
+			Neighbors.addAll(The_Graph.getNeighbors(Source));
 		return Neighbors;
 	}
 
 	public Set<Set<String>> cluster(){
-		WeakComponentClusterer<String, MyLink> Clusterer = new WeakComponentClusterer<String, GraphRepresentation.MyLink>();
+		WeakComponentClusterer<String, MyLink> Clusterer = new WeakComponentClusterer<>();
 		return Clusterer.transform(The_Graph);
 	}
 
 	public Set<String> getVertices(){
-		Set<String> Vertices = new HashSet<String>();
-		Vertices.addAll(The_Graph.getVertices());
-		return Vertices;
+		return new HashSet<>(The_Graph.getVertices());
 	}
 
 	public void reduce_edges(){
-		Collection<MyLink> edges = new HashSet<MyLink>();
-		edges.addAll(The_Graph.getEdges());
+		Collection<MyLink> edges = new HashSet<>(The_Graph.getEdges());
 		for (MyLink ML : edges) {
 			switch (ML.Type) {
 			case "include":
@@ -153,9 +143,8 @@ public class GraphRepresentation{
 		The_Graph.addVertex(center);
 		MyLink ml;
 		for (String s : Center) {
-			Collection<MyLink> CurrentLinks = new HashSet<MyLink>();
 			if (The_Graph.getIncidentEdges(s) != null) {
-				CurrentLinks.addAll(The_Graph.getIncidentEdges(s));
+				Collection<MyLink> CurrentLinks = new HashSet<>(The_Graph.getIncidentEdges(s));
 				for (MyLink ML : CurrentLinks) {
 					if (The_Graph.getEndpoints(ML).getFirst().equals(s) && !Center.contains(ML.To)) {
 						ml = new MyLink(ML.Type, center, ML.To);
@@ -237,10 +226,10 @@ public class GraphRepresentation{
 	}
 
 	public void populateCoreEntities(){
-		Core_Entities.put("Class", new HashSet<String>());
-		Core_Entities.put("Method", new HashSet<String>());
-		Core_Entities.put("Signature", new HashSet<String>());
-		Core_Entities.put("File", new HashSet<String>());
+		Core_Entities.put("Class", new HashSet<>());
+		Core_Entities.put("Method", new HashSet<>());
+		Core_Entities.put("Signature", new HashSet<>());
+		Core_Entities.put("File", new HashSet<>());
 		for (MyLink ml : The_Graph.getEdges()) {
 			switch (ml.Type) {
 			case "filebelongstomodule":

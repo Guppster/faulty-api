@@ -16,9 +16,9 @@ import java.util.regex.Pattern;
 public class CdifRepresentation{
 
 	private BufferedReader cdifReader;
-	private Map<String, String> idToEntity = new HashMap<String, String>();
-	private Set<String> fileNames = new HashSet<String>();
-	private Map<String, String> entityIdtoFileId = new HashMap<String, String>();
+	private final Map<String, String> idToEntity = new HashMap<>();
+	private final Set<String> fileNames = new HashSet<>();
+	private final Map<String, String> entityIdtoFileId = new HashMap<>();
 
 	public CdifRepresentation(String productName, Map<String, String> idToEntity, Set<String> fileNames){
 		this.idToEntity.putAll(idToEntity);

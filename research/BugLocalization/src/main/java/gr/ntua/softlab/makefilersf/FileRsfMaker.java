@@ -16,13 +16,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 public class FileRsfMaker{
-	private String productName;
+	private final String productName;
 	private RsfRepresentation rsfRepresentation;
 	private Map<String, String> entityNameToFileName;
-	private Map<String, String> entityIdToNames;
 	private Map<String, String> entityToId;
-	private Set<String> fileNames;
-	private Set<String> files;
 	private Map<String, Map<String, Set<String>>> allRelations;
 	private Map<String, Map<String, Set<String>>> allFileRelations;
 	private Map<String, Set<String>> entityToFiles;
@@ -43,8 +40,7 @@ public class FileRsfMaker{
 	}
 
 	private void cleanfileToId(){
-		files = new HashSet<String>();
-		files.addAll(rsfRepresentation.getFileIds());
+		Set<String> files = new HashSet<>(rsfRepresentation.getFileIds());
 	}
 
 	public Map<String, String> getEntityId(){
@@ -60,9 +56,9 @@ public class FileRsfMaker{
 		// for each entity in the rsf substitute with the file or files which are related to the specific entity... should I first populate
 		// a map containing a mapping from each entity to the set of files which contain it???
 		// the answer is probably strongly yes..
-		allRelations = new HashMap<String, Map<String, Set<String>>>();
+		allRelations = new HashMap<>();
 		allRelations.putAll(rsfRepresentation.getRelationEntityEntitiesMap());
-		entityToFiles = new HashMap<String, Set<String>>();
+		entityToFiles = new HashMap<>();
 		Map<String, Set<String>> DeclaredIn = allRelations.get("DeclaredIn".toLowerCase());
 		Map<String, Set<String>> DefinedIn = allRelations.get("DefinedIn".toLowerCase());
 		for (Entry<String, String> entityToFile : entityNameToFileName.entrySet()) {
@@ -105,10 +101,10 @@ public class FileRsfMaker{
 	}
 
 	private void makeAllFileRelations(){
-		allRelations = new HashMap<String, Map<String, Set<String>>>();
+		allRelations = new HashMap<>();
 		allRelations.putAll(rsfRepresentation.getRelationEntityEntitiesMap());
-		entityToFiles = new HashMap<String, Set<String>>();
-		Set<String> allMethodKeys = new HashSet<String>();
+		entityToFiles = new HashMap<>();
+		Set<String> allMethodKeys = new HashSet<>();
 		allMethodKeys.addAll(allRelations.get("DeclaredIn".toLowerCase()).keySet());
 		allMethodKeys.addAll(allRelations.get("DefinedIn".toLowerCase()).keySet());
 		Map<String, Set<String>> DeclaredIn = allRelations.get("DeclaredIn".toLowerCase());
@@ -131,7 +127,7 @@ public class FileRsfMaker{
 				else
 					entityToFiles.put(methodToFiles.getKey(), methodToFiles.getValue());
 		}
-		allFileRelations = new HashMap<String, Map<String, Set<String>>>();
+		allFileRelations = new HashMap<>();
 		allFileRelations.put("filebelongstomodule", allRelations.get("filebelongstomodule"));
 		allFileRelations.put("modulebelongstomodule", allRelations.get("modulebelongstomodule"));
 		for (Entry<String, Map<String, Set<String>>> completeRelations : allRelations.entrySet()) {
@@ -199,13 +195,11 @@ public class FileRsfMaker{
 	}
 
 	private Map<String, String> makeIdsToEntityNames(RsfRepresentation rsfRepresentation){
-		entityIdToNames = new HashMap<String, String>();
-		entityIdToNames.putAll(rsfRepresentation.getIdToEntityName());
-		return entityIdToNames;
+		return new HashMap<>(rsfRepresentation.getIdToEntityName());
 	}
 
 	private Set<String> makeFileNames(RsfRepresentation rsfRepresentation){
-		fileNames = new HashSet<String>();
+		Set<String> fileNames = new HashSet<>();
 		Set<String> fileIds = rsfRepresentation.getFileIds();
 		for (String s : fileIds) {
 			fileNames.add(rsfRepresentation.getName(s));
@@ -215,7 +209,7 @@ public class FileRsfMaker{
 
 	// @SuppressWarnings("unused")
 	private Set<String> initializeSet(String firstElement){
-		Set<String> toReturn = new HashSet<String>();
+		Set<String> toReturn = new HashSet<>();
 		toReturn.add(firstElement);
 		return toReturn;
 	}
@@ -228,8 +222,8 @@ public class FileRsfMaker{
 		return entityToFiles;
 	}
 
-	public Map<String, Set<String>> initializeMap(String key, String Value){
-		Map<String, Set<String>> toReturn = new HashMap<String, Set<String>>();
+	private Map<String, Set<String>> initializeMap(String key, String Value){
+		Map<String, Set<String>> toReturn = new HashMap<>();
 		toReturn.put(key, initializeSet(Value));
 		return toReturn;
 	}

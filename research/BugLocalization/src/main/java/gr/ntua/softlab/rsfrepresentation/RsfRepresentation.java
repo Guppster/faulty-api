@@ -19,21 +19,21 @@ import java.util.Set;
  *
  */
 public class RsfRepresentation{
-	private Map<String, Map<String, Set<String>>> relationEntityEntitiesID;
-	private Map<String, Map<String, Set<String>>> entityRelationEntitiesID;
-	private Map<String, Map<String, Set<String>>> entityEntitiesRelationID;
-	private Map<String, Map<String, Set<String>>> relationEntityEntities;
-	private Map<String, Map<String, Set<String>>> entityRelationEntities;
-	private Map<String, Map<String, Set<String>>> entityEntitiesRelation;
-	private Map<String, Map<String, Set<String>>> relationInverseEntityEntity;
+	private final Map<String, Map<String, Set<String>>> relationEntityEntitiesID;
+	private final Map<String, Map<String, Set<String>>> entityRelationEntitiesID;
+	private final Map<String, Map<String, Set<String>>> entityEntitiesRelationID;
+	private final Map<String, Map<String, Set<String>>> relationEntityEntities;
+	private final Map<String, Map<String, Set<String>>> entityRelationEntities;
+	private final Map<String, Map<String, Set<String>>> entityEntitiesRelation;
+	private final Map<String, Map<String, Set<String>>> relationInverseEntityEntity;
 	private Map<String, Map<String, Set<String>>> fileFileRelation;
-	Map<String, Map<String, Map<String, Integer>>> fileToFileToRelationAndCardinality;
+	private Map<String, Map<String, Map<String, Integer>>> fileToFileToRelationAndCardinality;
 	private Set<String> allEntityNames;
-	private List<String[]> fileRelations = new ArrayList<String[]>();
-	private Map<String, String> entityToId;
-	private Map<String, String> idToEntity;
+	private final List<String[]> fileRelations = new ArrayList<>();
+	private final Map<String, String> entityToId;
+	private final Map<String, String> idToEntity;
 	private Set<CallsTuple> calls;
-	private Set<String> files = new HashSet<String>();
+	private final Set<String> files = new HashSet<>();
 	private CdifRepresentation cdifRepresentation;
 
 	// private Set<DeclaredTuple> declarations;
@@ -42,15 +42,15 @@ public class RsfRepresentation{
 	 * @Constructor RsfRepresentation() no arguments constructor, it initializes all maps, which are used to provide necessary functionality
 	 */
 	public RsfRepresentation(){
-		relationEntityEntitiesID = new HashMap<String, Map<String, Set<String>>>();
-		entityRelationEntitiesID = new HashMap<String, Map<String, Set<String>>>();
-		entityEntitiesRelationID = new HashMap<String, Map<String, Set<String>>>();
-		relationEntityEntities = new HashMap<String, Map<String, Set<String>>>();
-		entityRelationEntities = new HashMap<String, Map<String, Set<String>>>();
-		entityEntitiesRelation = new HashMap<String, Map<String, Set<String>>>();
-		relationInverseEntityEntity = new HashMap<String, Map<String, Set<String>>>();
-		entityToId = new HashMap<String, String>();
-		idToEntity = new HashMap<String, String>();
+		relationEntityEntitiesID = new HashMap<>();
+		entityRelationEntitiesID = new HashMap<>();
+		entityEntitiesRelationID = new HashMap<>();
+		relationEntityEntities = new HashMap<>();
+		entityRelationEntities = new HashMap<>();
+		entityEntitiesRelation = new HashMap<>();
+		relationInverseEntityEntity = new HashMap<>();
+		entityToId = new HashMap<>();
+		idToEntity = new HashMap<>();
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class RsfRepresentation{
 		if (relationEntityEntitiesID.containsKey(relation))
 			return relationEntityEntitiesID.get(relation);
 		else
-			return new HashMap<String, Set<String>>();
+			return new HashMap<>();
 	}
 
 	/**
@@ -188,28 +188,26 @@ public class RsfRepresentation{
 	 *         Calls between files
 	 */
 	public String getFileRelationsRsf(){
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		if (fileFileRelation == null) {
-			fileFileRelation = new HashMap<String, Map<String, Set<String>>>();
+			fileFileRelation = new HashMap<>();
 		}
 		associateFile();
-		Iterator<Entry<String, Map<String, Set<String>>>> fileFileRelationIterator = fileFileRelation.entrySet().iterator();
-		while (fileFileRelationIterator.hasNext()) {
-			Entry<String, Map<String, Set<String>>> fileFileRelationEntry = fileFileRelationIterator.next();
-			Iterator<Entry<String, Set<String>>> fileRelationIterator = fileFileRelationEntry.getValue().entrySet().iterator();
-			while (fileRelationIterator.hasNext()) {
-				Entry<String, Set<String>> fileRelationEntry = fileRelationIterator.next();
-				for (String relation : fileRelationEntry.getValue()) {
-					result += relation + "\t\"" + fileFileRelationEntry.getKey() + "\"#" + getId(fileFileRelationEntry.getKey()) + "\t\""
-							+ fileRelationEntry.getKey() + "\"#" + getId(fileRelationEntry.getKey()) + "\n";
-				}
-			}
-		}
-		result = "";
+        for (Entry<String, Map<String, Set<String>>> fileFileRelationEntry : fileFileRelation.entrySet())
+        {
+            for (Entry<String, Set<String>> fileRelationEntry : fileFileRelationEntry.getValue().entrySet())
+            {
+                for (String relation : fileRelationEntry.getValue())
+                {
+                    result.append(relation).append("\t\"").append(fileFileRelationEntry.getKey()).append("\"#").append(getId(fileFileRelationEntry.getKey())).append("\t\"").append(fileRelationEntry.getKey()).append("\"#").append(getId(fileRelationEntry.getKey())).append("\n");
+                }
+            }
+        }
+		result = new StringBuilder();
 		for (String[] tokens : fileRelations) {
-			result += tokens[2] + "\t\"" + tokens[0] + "\"#" + getId(tokens[0]) + "\t\"" + tokens[1] + "\"#" + getId(tokens[1]) + "\n";
+			result.append(tokens[2]).append("\t\"").append(tokens[0]).append("\"#").append(getId(tokens[0])).append("\t\"").append(tokens[1]).append("\"#").append(getId(tokens[1])).append("\n");
 		}
-		return result;
+		return result.toString();
 	}
 
 	public Map<String, Map<String, Map<String, Integer>>> getFileToFileToRelationToCardinalityMap(){
@@ -224,7 +222,7 @@ public class RsfRepresentation{
 	 * @return a Set<String> containing all Functions DefinedIn File(param)
 	 */
 	public Set<String> getContainedFunctions(String File){
-		Set<String> containedFunctions = new HashSet<String>();
+		Set<String> containedFunctions = new HashSet<>();
 		if (relationInverseEntityEntity.get("DefinedIn").containsKey(File))
 			containedFunctions.addAll(relationInverseEntityEntity.get("DefinedIn").get(File));
 		return containedFunctions;
@@ -276,7 +274,7 @@ public class RsfRepresentation{
 	 * @return
 	 */
 	private Set<String> initializeSet(String firstElement){
-		Set<String> newSet = new HashSet<String>();
+		Set<String> newSet = new HashSet<>();
 		newSet.add(firstElement);
 		return newSet;
 	}
@@ -290,7 +288,7 @@ public class RsfRepresentation{
 	 * @return
 	 */
 	private Map<String, Set<String>> initializeStringSetMap(String key, Set<String> value){
-		return new HashMap<String, Set<String>>();
+		return new HashMap<>();
 	}
 
 	/**
@@ -298,13 +296,14 @@ public class RsfRepresentation{
 	 * implied "Calls" relation between files
 	 */
 	private void extractCalls(){
-		calls = new HashSet<CallsTuple>();
-		Iterator<Entry<String, Set<String>>> callsIterator = relationEntityEntitiesID.get("Calls").entrySet().iterator();
-		while (callsIterator.hasNext()) {
-			Entry<String, Set<String>> callsEntries = callsIterator.next();
-			for (String callee : callsEntries.getValue())
-				calls.add(new CallsTuple(callsEntries.getKey(), callee));
-		}
+		calls = new HashSet<>();
+        for (Entry<String, Set<String>> callsEntries : relationEntityEntitiesID.get("Calls").entrySet())
+        {
+            for (String callee : callsEntries.getValue())
+            {
+                calls.add(new CallsTuple(callsEntries.getKey(), callee));
+            }
+        }
 	}
 
 	/**
@@ -316,39 +315,38 @@ public class RsfRepresentation{
 			System.out.println("I insert Accesses and Sets");
 			Map<String, String> entityToFile = cdifRepresentation.readFile();
 			if (relationEntityEntitiesID.get("Accesses") != null) {
-				Iterator<Entry<String, Set<String>>> entityEntitiesIterator = relationEntityEntitiesID.get("Accesses").entrySet()
-						.iterator();
-				while (entityEntitiesIterator.hasNext()) {
-					Entry<String, Set<String>> entityEntitiesEntry = entityEntitiesIterator.next();
-					for (String accessedEntity : entityEntitiesEntry.getValue()) {
-						fileRelations.add(new String[] { entityToFile.get(entityEntitiesEntry.getKey()), entityToFile.get(accessedEntity),
-								"Accesses" });
-					}
-				}
+                for (Entry<String, Set<String>> entityEntitiesEntry : relationEntityEntitiesID.get("Accesses").entrySet())
+                {
+                    for (String accessedEntity : entityEntitiesEntry.getValue())
+                    {
+                        fileRelations.add(new String[]{entityToFile.get(entityEntitiesEntry.getKey()), entityToFile.get(accessedEntity),
+                                "Accesses"});
+                    }
+                }
 			}
 
 			if (relationEntityEntitiesID.get("Sets") != null) {
-				Iterator<Entry<String, Set<String>>> entityEntitiesIterator = relationEntityEntitiesID.get("Sets").entrySet().iterator();
-				while (entityEntitiesIterator.hasNext()) {
-					Entry<String, Set<String>> entityEntitiesEntry = entityEntitiesIterator.next();
-					for (String setEntity : entityEntitiesEntry.getValue()) {
-						fileRelations.add(new String[] { entityToFile.get(entityEntitiesEntry.getKey()), entityToFile.get(setEntity),
-								"Sets" });
-					}
-				}
+                for (Entry<String, Set<String>> entityEntitiesEntry : relationEntityEntitiesID.get("Sets").entrySet())
+                {
+                    for (String setEntity : entityEntitiesEntry.getValue())
+                    {
+                        fileRelations.add(new String[]{entityToFile.get(entityEntitiesEntry.getKey()), entityToFile.get(setEntity),
+                                "Sets"});
+                    }
+                }
 			}
 		}
 
 		extractCalls();
 		if (relationEntityEntitiesID.get("Include") != null) {
-			Iterator<Entry<String, Set<String>>> entityEntitiesIterator = relationEntityEntitiesID.get("Include").entrySet().iterator();
-			while (entityEntitiesIterator.hasNext()) {
-				Entry<String, Set<String>> entityEntitiesEntry = entityEntitiesIterator.next();
-				for (String file : entityEntitiesEntry.getValue()) {
-					// insertToMap(fileFileRelation, new String[]{entityEntitiesEntry.getKey(), file, "Include" });
-					fileRelations.add(new String[] { entityEntitiesEntry.getKey(), file, "Include" });
-				}
-			}
+            for (Entry<String, Set<String>> entityEntitiesEntry : relationEntityEntitiesID.get("Include").entrySet())
+            {
+                for (String file : entityEntitiesEntry.getValue())
+                {
+                    // insertToMap(fileFileRelation, new String[]{entityEntitiesEntry.getKey(), file, "Include" });
+                    fileRelations.add(new String[]{entityEntitiesEntry.getKey(), file, "Include"});
+                }
+            }
 		}
 		for (CallsTuple ct : calls) {
 			for (String s : getDefinedIn(ct.getCaller()))
@@ -424,7 +422,7 @@ public class RsfRepresentation{
 		if (relationEntityEntitiesID.get("DefinedIn").containsKey(function))
 			return relationEntityEntitiesID.get("DefinedIn").get(function);
 		else
-			return (new HashSet<String>());
+			return (new HashSet<>());
 	}
 
 	/**
@@ -442,23 +440,22 @@ public class RsfRepresentation{
 		if (relationEntityEntitiesID.get("DeclaredIn").containsKey(function))
 			return relationEntityEntitiesID.get("DeclaredIn").get(function);
 		else
-			return (new HashSet<String>());
+			return (new HashSet<>());
 	}
 
 	public Set<String> getFunctionIds(){
 		Map<String, Set<String>> Calls = relationEntityEntitiesID.get("Calls");
-		Set<String> Functions = new HashSet<String>();
+		Set<String> Functions = new HashSet<>();
 		for (Entry<String, Set<String>> Call : Calls.entrySet()) {
 			Functions.add(Call.getKey());
-			for (String s : Call.getValue())
-				Functions.add(s);
+			Functions.addAll(Call.getValue());
 		}
 		return Functions;
 	}
 
 	public Set<String> getFileIds(){
 		Map<String, Set<String>> FileBelongsToModule = relationEntityEntitiesID.get("filebelongstomodule");
-		Set<String> Files = new HashSet<String>();
+		Set<String> Files = new HashSet<>();
 		for (Entry<String, Set<String>> fileToModule : FileBelongsToModule.entrySet()) {
 			Files.add(fileToModule.getKey());
 			for (String s : fileToModule.getValue())
@@ -480,17 +477,16 @@ public class RsfRepresentation{
 
 	public Set<String> getFunctionNames(){
 		Map<String, Set<String>> Calls = relationEntityEntitiesID.get("Calls");
-		Set<String> Functions = new HashSet<String>();
+		Set<String> Functions = new HashSet<>();
 		for (Entry<String, Set<String>> Call : Calls.entrySet()) {
 			Functions.add(Call.getKey());
-			for (String s : Call.getValue())
-				Functions.add(s);
+			Functions.addAll(Call.getValue());
 		}
 		return Functions;
 	}
 
 	private void makeAllEntities(){
-		allEntityNames = new HashSet<String>();
+		allEntityNames = new HashSet<>();
 		for (Entry<String, Map<String, Set<String>>> e : entityEntitiesRelation.entrySet()) {
 			allEntityNames.add(e.getKey());
 			allEntityNames.addAll(e.getValue().keySet());

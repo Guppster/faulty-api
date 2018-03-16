@@ -26,20 +26,19 @@ public class ClusterLast extends Pattern {
 			root.add(orphanContainer);
 
 			Vector allOrphans = orphans();
-			Iterator iaO = allOrphans.iterator();
 
-			while (iaO.hasNext())
-			{
-				Node ncurr = (Node) iaO.next();
-				// Change this to an iterator
-				//for (int i = 0; i < orphanNumber(); i++) {
-				//Node ncurr = (Node) orphans().elementAt(i);
-				DefaultMutableTreeNode curr = ncurr.getTreeNode();
+            for (Object allOrphan : allOrphans)
+            {
+                Node ncurr = (Node) allOrphan;
+                // Change this to an iterator
+                //for (int i = 0; i < orphanNumber(); i++) {
+                //Node ncurr = (Node) orphans().elementAt(i);
+                DefaultMutableTreeNode curr = ncurr.getTreeNode();
 
-				if (!ncurr.isCluster())
-				{
-					orphanContainer.add(curr);
-					IO.put("contain\t\t" + nOrphanContainer.getName() + "\t" + ncurr.getName(),	2);
+                if (!ncurr.isCluster())
+                {
+                    orphanContainer.add(curr);
+                    IO.put("contain\t\t" + nOrphanContainer.getName() + "\t" + ncurr.getName(), 2);
 
 /* Commented this out. Why do we need to induce edges at this point?
    Uncomment the induceEdges line below, if we need to bring this back in
@@ -60,8 +59,8 @@ public class ClusterLast extends Pattern {
 						vModified.add((Node) ec.getUserObject());
 					}
 */
-				}
-			} // end while
+                }
+            } // end while
 		} //end if
 
 		//induceEdges(vModified, root);

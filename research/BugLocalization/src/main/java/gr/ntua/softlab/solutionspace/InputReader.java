@@ -18,16 +18,16 @@ import java.util.Set;
 public class InputReader{
 	@SuppressWarnings("unused")
 	private String BugReport;
-	private String productName;
+	private final String productName;
 	private String[] filenames;
 	private String[] BugReports;
 	private ArrayList<Integer> BugNumbers;
-	private RsfRepresentation rsfRepresentation;
+	private final RsfRepresentation rsfRepresentation;
 	private int i = -1;
 	private String filename;
 	private ArrayList<String> lsaTokens;
-	private Set<String> answer = new HashSet<String>();
-    private Set<String> inputTokens = new HashSet<String>();
+	private Set<String> answer = new HashSet<>();
+    private final Set<String> inputTokens = new HashSet<>();
     private Map<String, String> fileName2Cluster;
 	private Map<String, Set<String>> clusterName2fileName;
 
@@ -39,10 +39,10 @@ public class InputReader{
 		readClusters();
 	}
 
-	public Set<String> CompileAnswers(int Bug_ID){
+	private Set<String> CompileAnswers(int Bug_ID){
 		BufferedReader ansbr;
 		File answers = new File(Paths.GOLDSTANDARD + productName + "/" + BugNumbers.get(Bug_ID) + "_sol.txt");
-		answer = new HashSet<String>();
+		answer = new HashSet<>();
 		try {
 			ansbr = new BufferedReader(new FileReader(answers));
 			while (ansbr.ready()) {
@@ -73,27 +73,26 @@ public class InputReader{
 		return BugReport.split("\\.")[0];
 	}
 
-	private ArrayList<Integer> FetchBugNumbers(){
-		BugNumbers = new ArrayList<Integer>();
+	private void FetchBugNumbers(){
+		BugNumbers = new ArrayList<>();
 		try {
 			File BugIDs = new File(Paths.BRLists + productName + ".lst");
 			BufferedReader bugIDr = new BufferedReader(new FileReader(BugIDs));
 			while (bugIDr.ready()) {
 				int buffer = Integer.parseInt(bugIDr.readLine());
-				BugNumbers.add(new Integer(buffer));
+				BugNumbers.add(buffer);
 			}
 			bugIDr.close();
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
 		}
-		return BugNumbers;
 	}
 
-	public void readLsaInput(){
+	private void readLsaInput(){
 		answer = CompileAnswers(i);
 		try {
 			BufferedReader lsaInputReader = new BufferedReader(new FileReader(Paths.FINALINPUTBRS + productName + "/input/" + filename));
-			lsaTokens = new ArrayList<String>();
+			lsaTokens = new ArrayList<>();
 			String Entity;
 			while (lsaInputReader.ready()) {
 				Entity = lsaInputReader.readLine();
@@ -108,7 +107,7 @@ public class InputReader{
 		}
 	}
 
-	public void readInputBugReport(){
+	private void readInputBugReport(){
 		try {
 			BufferedReader inputBugReportReader = new BufferedReader(new FileReader(Paths.QUERYBRS + productName + "/" + BugReport));
 			while (inputBugReportReader.ready())
@@ -136,8 +135,8 @@ public class InputReader{
 	}
 
 	private void readClusters(){
-		fileName2Cluster = new HashMap<String, String>();
-		clusterName2fileName = new HashMap<String, Set<String>>();
+		fileName2Cluster = new HashMap<>();
+		clusterName2fileName = new HashMap<>();
 		try {
 			BufferedReader clustersReader = new BufferedReader(
 					new FileReader(Paths.ACDC_OUTPUT_PATH + productName + "_file_final_acdc.rsf"));
@@ -149,7 +148,7 @@ public class InputReader{
 				if (clusterName2fileName.containsKey(file2Cluster.getValue()))
 					clusterName2fileName.get(file2Cluster.getValue()).add(file2Cluster.getKey());
 				else {
-					Set<String> toInsert = new HashSet<String>();
+					Set<String> toInsert = new HashSet<>();
 					toInsert.add(file2Cluster.getKey());
 					clusterName2fileName.put(file2Cluster.getValue(), toInsert);
 				}
@@ -161,9 +160,7 @@ public class InputReader{
 	}
 
 	public Set<String> getLsaTokens(){
-		Set<String> toReturn = new HashSet<String>();
-		toReturn.addAll(lsaTokens);
-		return toReturn;
+		return new HashSet<>(lsaTokens);
 	}
 
 	public Set<String> getAnswer(){

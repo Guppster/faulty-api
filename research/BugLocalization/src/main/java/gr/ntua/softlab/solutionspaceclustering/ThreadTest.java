@@ -11,16 +11,16 @@ import acdc.ACDC;
 
 public class ThreadTest{
 
-	public static class IoannaRunnable implements Runnable{
+	static class IoannaRunnable implements Runnable{
 
 		private File inputFile;
 		private File outputFile;
 
-		public IoannaRunnable(File myInFile, File myOutFile){
+		IoannaRunnable(File myInFile, File myOutFile){
 			setMyFile(myInFile, myOutFile);
 		}
 
-		public void setMyFile(File myInFile, File myOutFile){
+		void setMyFile(File myInFile, File myOutFile){
 			this.inputFile = myInFile;
 			this.outputFile = myOutFile;
 		}

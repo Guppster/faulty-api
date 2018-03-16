@@ -10,7 +10,7 @@ public class FullOutput extends Pattern
 		systemName = _systemName;
 	}
 	
-	private String systemName;
+	private final String systemName;
 	
 	public void execute() 
 	{
@@ -20,13 +20,12 @@ public class FullOutput extends Pattern
 		newDummy.setTreeNode(newRoot);
 
 		Vector rootChildren = nodeChildren(root);
-		Iterator irC = rootChildren.iterator();
-		while (irC.hasNext())
-		{
-			Node n = (Node) irC.next();
-			DefaultMutableTreeNode curr = n.getTreeNode();
-			newRoot.add(curr);
-		}
+        for (Object aRootChildren : rootChildren)
+        {
+            Node n = (Node) aRootChildren;
+            DefaultMutableTreeNode curr = n.getTreeNode();
+            newRoot.add(curr);
+        }
 		root.add(newRoot);
 	}
 }

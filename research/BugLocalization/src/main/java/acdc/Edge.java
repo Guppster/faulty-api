@@ -3,7 +3,7 @@ package acdc;
 * This class encapsulates information about an Edge object.
 * It provides get and set methods for the attributes of this Edge object.
 */
-public class Edge 
+class Edge
 {
   // Instance variables
   private Node source;

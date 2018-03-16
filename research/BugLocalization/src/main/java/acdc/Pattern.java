@@ -2,16 +2,16 @@ package acdc;
 import java.util.*;
 import javax.swing.tree.*;
 
-public abstract class Pattern {
-	public Pattern(DefaultMutableTreeNode _root)
+abstract class Pattern {
+	Pattern(DefaultMutableTreeNode _root)
 	{
 		root = _root;
 		name = "";
 	}
 	
-	protected DefaultMutableTreeNode root;
+	final DefaultMutableTreeNode root;
 	
-	protected String name;
+	String name;
 	
 	public String getName()
 	{
@@ -20,7 +20,7 @@ public abstract class Pattern {
 
 	protected abstract void execute();
 
-	protected Vector nodeChildren(DefaultMutableTreeNode node) 
+	Vector nodeChildren(DefaultMutableTreeNode node)
 	{
 		Vector result = new Vector();
 		Enumeration children = node.children();
@@ -33,22 +33,23 @@ public abstract class Pattern {
 		return result;
 	}
 	
-	protected Vector orphans()
+	Vector orphans()
 	{
 		Vector result = new Vector();
 		Vector rootChildren = nodeChildren(root);
-		Iterator iv = rootChildren.iterator();
 
-		while (iv.hasNext())
+		for (Object aRootChildren : rootChildren)
 		{
-			Node curr = (Node) iv.next();
+			Node curr = (Node) aRootChildren;
 			if (!curr.isCluster())
+			{
 				result.add(curr);
+			}
 		}
 		return result;
 	}
 
-	protected int orphanNumber()
+	int orphanNumber()
 		{
 			Vector rootChildren = nodeChildren(root);
 			Iterator iv = rootChildren.iterator();
@@ -87,22 +88,23 @@ public abstract class Pattern {
 			HashSet outNodes = (HashSet) ncurr.getTargets().clone();
 			//IO.put("\n");
 			//traverse the set of target nodes of the current node
-			Iterator ioN = outNodes.iterator();
-			while (ioN.hasNext()) {
-				//traverse the nodes from the root to the current   
-				//target node creating edges 
-				Node across = (Node) ioN.next();
+			for (Object outNode : outNodes)
+			{
+				//traverse the nodes from the root to the current
+				//target node creating edges
+				Node across = (Node) outNode;
 				DefaultMutableTreeNode tacross = across.getTreeNode();
 				TreeNode[] path = tacross.getPath();
-				for (int i = 0; i < path.length; i++) {
-					TreeNode k = path[i];
+				for (TreeNode k : path)
+				{
 					DefaultMutableTreeNode j = (DefaultMutableTreeNode) k;
 					Node nj = (Node) j.getUserObject();
 					//IO.put("EdgeInduction.java\t\tTarget " + nj.getName());
-					//don't create induced edges for the root or circular edges 
-					if (!j.isRoot()) {
+					//don't create induced edges for the root or circular edges
+					if (!j.isRoot())
+					{
 						Edge e = new Edge(ncurr, nj, "induced");
-						IO.put("\tInduced edge from "	+ ncurr.getName() + " to " + nj.getName(), 2);
+						IO.put("\tInduced edge from " + ncurr.getName() + " to " + nj.getName(), 2);
 						nj.addInEdge(e);
 						ncurr.addOutEdge(e);
 					}
@@ -118,16 +120,16 @@ public abstract class Pattern {
 			HashSet outNodes2 = (HashSet) ncurr2.getSources().clone();
 
 			//traverse the set of target nodes of the current node
-			Iterator ioN2 = outNodes2.iterator();
-			while (ioN2.hasNext()) {
+			for (Object anOutNodes2 : outNodes2)
+			{
 				//IO.put("\n");
 				//traverse the nodes from the root to
 				//the current target node creating edges
-				Node across2 = (Node) ioN2.next();
+				Node across2 = (Node) anOutNodes2;
 				DefaultMutableTreeNode tacross2 = across2.getTreeNode();
 				TreeNode[] path2 = tacross2.getPath();
-				for (int i = 0; i < path2.length; i++) {
-					TreeNode k2 = path2[i];
+				for (TreeNode k2 : path2)
+				{
 					DefaultMutableTreeNode j2 = (DefaultMutableTreeNode) k2;
 					Node nj2 = (Node) j2.getUserObject();
 					//IO.put("EdgeInduction.java\t\tSource " + nj2.getName());
@@ -139,7 +141,8 @@ public abstract class Pattern {
 					//}else{
 					//don't create induced edges for
 					//the root
-					if (!j2.isRoot()) {
+					if (!j2.isRoot())
+					{
 						Edge e2 = new Edge(nj2, ncurr2, "induced");
 						IO.put("\tInduced edge from " + nj2.getName() + " to " + ncurr2.getName(), 2);
 						nj2.addOutEdge(e2);

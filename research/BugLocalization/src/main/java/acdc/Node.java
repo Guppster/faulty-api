@@ -12,10 +12,10 @@ public class Node
 {
     private String name;
     private String type;
-    private HashSet sources;
-    private HashSet targets;
-    private ArrayList incomingEdges;
-    private ArrayList outgoingEdges;
+    private final HashSet sources;
+    private final HashSet targets;
+    private final ArrayList incomingEdges;
+    private final ArrayList outgoingEdges;
     private DefaultMutableTreeNode treeNode;
 
     public boolean equals(Object o)
@@ -68,13 +68,12 @@ public class Node
     
     public void printTargets()
     {
-    
-	Iterator itargets = targets.iterator();
-	while(itargets.hasNext())
-	{    
-	    Node n = (Node)itargets.next();
-	    IO.put("\tTarget of  **** " + name + " **** := " + n.getName() + ", Type := " + n.getType(),2);
-	}
+
+        for (Object target : targets)
+        {
+            Node n = (Node) target;
+            IO.put("\tTarget of  **** " + name + " **** := " + n.getName() + ", Type := " + n.getType(), 2);
+        }
     
     }
     

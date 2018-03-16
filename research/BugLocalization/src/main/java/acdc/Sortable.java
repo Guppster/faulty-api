@@ -1,5 +1,5 @@
 package acdc;
-public class Sortable implements Comparable 
+class Sortable implements Comparable
 {
 private  Comparable key = "";
 private  Object o = null;
