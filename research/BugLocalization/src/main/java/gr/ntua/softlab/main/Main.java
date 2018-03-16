@@ -1,6 +1,5 @@
 package gr.ntua.softlab.main;
 
-//EBOOK.GURU(AT)yahoo(dot)com
 import gr.ntua.softlab.filepaths.Paths;
 import gr.ntua.softlab.makefilersf.FileRsfMaker;
 import gr.ntua.softlab.solutionspace.InputReader;
@@ -51,16 +50,9 @@ public class Main{
 	private Map<String, Double> fileToCliqueConnectivity = new HashMap<String, Double>();
 	private final int maxClusterSize = 5;
 	private String currentFileName = "";
-	// private Set<String> expandedLsaTokens;
-	// private Set<String> expandedInputTokens;
 	private Map<String, Set<String>> solutionClusterName2FileName;
 	private Map<String, String> solutionFileName2ClusterName;
 	private Set<String> finalV = new HashSet<String>();
-	// private Set<String> clusterExpandedLsaTokens = new HashSet<String>();
-	// private Map<String, ArrayList<String>> fileName2Parts = new HashMap<String, ArrayList<String>>();
-	// private Map<String, Set<String>> filebelongstomodule;
-	// private Map<String, Integer> queryModuleWeights;
-	// private Map<String, Integer> moduleWeights;
 	private Set<String> fileInputTokens;
 
 	public static void main(String[] args){
@@ -81,14 +73,7 @@ public class Main{
 		inputReader = new InputReader(productName, fileRsfMaker.getRsfRepresentation());
 		fileNames2Cluster.putAll(inputReader.getFileNames2Clusters());
 		clusterName2FileName.putAll(inputReader.getClusterName2FileName());
-		// for (Entry<String, Set<String>> cluster : clusterName2FileName.entrySet()) {
-		// if (cluster.getValue().size() > 50)
-		// System.out.println(cluster.getKey() + " " + cluster.getValue().size());
-		// }
-		// unusedRelations.add("include");
-		// unusedRelations.add("macrouse");
 		unusedRelations.add("macrodefinition");
-		// unusedRelations.add("sets");
 		unusedRelations.add("methodbelongstoclass");
 		unusedRelations.add("declaredin");
 		unusedRelations.add("hastype");
@@ -97,11 +82,9 @@ public class Main{
 		unusedRelations.add("usestype");
 		unusedRelations.add("accessibleentitybelongstofile");
 		unusedRelations.add("inheritsfrom");
-		// unusedRelations.add("calls");
 		unusedRelations.add("classbelongstofile");
 		unusedRelations.add("definedin");
 		unusedRelations.add("attributebelongstoclass");
-		// unusedRelations.add("accesses");
 		while (prepareNextReport()) {
 			System.out
 					.println("------------------------------------------------------------------------------------------------------------------------");
@@ -143,25 +126,6 @@ public class Main{
 			reverseAllFileRelations();
 			constructSolutionSpace();
 			performRanking();
-			// calculateInitialResults();
-			// System.out.println("####################Search Modules######################");
-			// makeSearchModuleWeights();
-			// System.out.println("********************Inputs Modules**********************");
-			// makeQueryModuleWeights();
-			// System.out.println("********************Answers Size **********************");
-			// System.out.println(answer.size());
-			// System.out.println("####################Paths from Lsa######################");
-			// calculatePathsFromLsa();
-			// System.out.println("####################Paths from Input######################");
-			// calculatePathsFromInput();
-			// for (Entry<String, Set<String>> moduleAndContents : searchModuleToFiles.entrySet()) {
-			// moduleAndContents.getValue().retainAll(answer);
-			// System.out.println(moduleAndContents.getKey() + " " + moduleAndContents.getValue().size() + " " + answer.size());
-			// }
-			// System.out.println("--------------------Answer Modules----------------------");
-			// makeAnswerModuleWeights();
-			// makeFilename2Parts();
-			// makeAnswerModuleWeights();
 			return true;
 		} else {
 			return false;
@@ -238,26 +202,19 @@ public class Main{
 		finalV.addAll(Visited);
 		Map<String, Map<String, Set<String>>> fileRsfIn = new HashMap<String, Map<String, Set<String>>>();
 		fileRsfIn.putAll(fileRsfMaker.getAllFileRelations());
+
 		for (String s : unusedRelations)
+		{
 			fileRsfIn.remove(s);
+		}
+
 		clique.addAll(selectMostConnected(fileRsfMaker.getAllFileRelations(), finalV));
 		System.out.println("clique size = " + clique.size());
+
 		for (String fileName : finalV) {
 			fileToCliqueConnectivity.put(fileName, new Double(0.0));
 		}
-		// for (Entry<String, Map<String, Set<String>>> completeRelation : fileRsfIn.entrySet()) {
-		// for (Entry<String, Set<String>> entityToEntities : completeRelation.getValue().entrySet()) {
-		// for (String s : entityToEntities.getValue()) {
-		// if (finalV.contains(s) && finalV.contains(entityToEntities.getKey()))
-		// if (clique.contains(s))
-		// fileToCliqueConnectivity.put(entityToEntities.getKey(),
-		// fileToCliqueConnectivity.get(entityToEntities.getKey()) + 1);
-		// else if (clique.contains(entityToEntities.getKey()))
-		// fileToCliqueConnectivity.put(s, fileToCliqueConnectivity.get(s) + 1);
-		//
-		// }
-		// }
-		// }
+
 		for (Entry<String, Map<String, Set<String>>> completeRelation : fileRsfIn.entrySet()) {
 			for (Entry<String, Set<String>> entityToEntities : completeRelation.getValue().entrySet()) {
 				for (String s : entityToEntities.getValue()) {
@@ -270,25 +227,6 @@ public class Main{
 			}
 		}
 		fileToCliqueConnectivity = sortByComparatorDouble(fileToCliqueConnectivity);
-		/* fileToCliqueConnectivity = sortByComparatorDouble(fileToCliqueConnectivity); Map<Double, List<String>> scoreToKeys = new
-		 * HashMap<Double, List<String>>(); for (Entry<String, Double> fileToClique : fileToCliqueClusterConnectivity.entrySet()) { if
-		 * (scoreToKeys.containsKey(fileToClique.getValue())) { scoreToKeys.get(fileToClique.getValue()).add(fileToClique.getKey()); } else
-		 * { scoreToKeys.put(fileToClique.getValue(), new ArrayList<String>());
-		 * scoreToKeys.get(fileToClique.getValue()).add(fileToClique.getKey()); } } // for (Entry<Double, List<String>> e :
-		 * scoreToKeys.entrySet()) // Collections.sort(e.getValue());
-		 * 
-		 * Map<Double, List<String>> treeMap = new TreeMap<Double, List<String>>(new Comparator<Double>(){
-		 * 
-		 * @Override public int compare(Double o1, Double o2){ return o2.compareTo(o1); }
-		 * 
-		 * }); treeMap.putAll(scoreToKeys); try { new File(Paths.URANKEDREPORTS + productName).mkdirs(); BufferedWriter URankedWriter = new
-		 * BufferedWriter(new FileWriter(Paths.URANKEDREPORTS + productName + "/" + currentFileName.split("_")[0] + ".csv"));
-		 * 
-		 * for (Entry<Double, List<String>> file : treeMap.entrySet()) { // if (file.getValue() != 0) Collections.sort(file.getValue()); for
-		 * (String s : file.getValue()) if (!answer.contains(s)) { URankedWriter.write(String.format("\t%-85s\t%15f\t\n", s,
-		 * file.getKey())); System.out.format("\t%-85s\t%15f\t\n", s, file.getKey()); } else {
-		 * URankedWriter.write(String.format("\t%-85s\t%15f\t<-------------\n", s, file.getKey()));
-		 * System.out.format("\t%-85s\t%15f\t<-------------\n", s, file.getKey()); } } scoreToKe.clear(); treeMap.clear(); */
 		Map<String, Double> treeMap = new TreeMap<String, Double>(new Comparator<String>(){
 
 			@Override
@@ -336,15 +274,8 @@ public class Main{
 		hits.retainAll(answer);
 		System.out.println("Recall (Pre reduction)= " + hits.size() / (double) answer.size());
 		fileInputTokens.removeAll(bad);
-		// clique.addAll(fileInputTokens);
 		clique.addAll(selectMostConnected(fileRsfMaker.getAllFileRelations(), finalV));
-		// clique.addAll(selectMostConnected(fileRsfMaker.getAllFileRelations(), fileInputTokens));
 		System.out.println("***********************PERFORMING CLUSTERING***********************");
-		// finalV.clear();
-		// for (String s : Visited) {
-		// if (!s.contains(".h"))
-		// finalV.add(s);
-		// }
 		printSolutionRsf(finalV, fileRsfMaker.getAllFileRelations(), inputReader.getBugNumber(), fileRsfMaker.getEntityId(), clique);
 		Set<String> VisitedTry = new HashSet<String>();
 		// remove .h from answer
@@ -363,30 +294,13 @@ public class Main{
 		finalV.clear();
 		finalV.addAll(Visited);
 
-		// -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~ClusterSizecalculation-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
-		// -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
+		// Cluster size calculation
 		for (Entry<String, Set<String>> cluster : solutionClusterName2FileName.entrySet()) {
 			if (cluster.getValue().size() > maxClusterSize)
 				clustersToBreakDown.add(cluster.getKey());
 		}
 
-		// ~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-Call big cluster Splitter~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
-		// ~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
-		// Map<String, Set<String>> rearrangedBig = new HashMap<String, Set<String>>();
-		// rearrangedBig.putAll(rearrangeClusters(clustersToBreakDown, clique));
-		// for (String s : clustersToBreakDown) {
-		// solutionClusterName2FileName.get(s).clear();
-		// solutionClusterName2FileName.remove(s);
-		// }
-		// solutionClusterName2FileName.putAll(rearrangedBig);
-		// solutionFileName2ClusterName.clear();
-		// for (Entry<String, Set<String>> cluster : solutionClusterName2FileName.entrySet())
-		// for (String fileName : cluster.getValue())
-		// solutionFileName2ClusterName.put(fileName, cluster.getKey());
-
-		// ---------------------------------------------------------------------------------------------------------------------------------------------------
-		// **************************************************************FinalResultsCalculation**************************************************************
-		// ---------------------------------------------------------------------------------------------------------------------------------------------------
+		// Final results calculation
 		toFromCliqueConnectivity(fileRsfMaker.getAllFileRelations(), clique, GSClusters);
 		// VisitedTry.addAll(SelectInGSValues(fileRsfMaker.getAllFileRelations(), GSClusters));
 		Map<String, Double> clusterScored = new HashMap<String, Double>();
@@ -395,18 +309,11 @@ public class Main{
 			if (MaxClusterSize < e.getValue().size())
 				MaxClusterSize = e.getValue().size();
 		}
-		// -~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+
-		// ~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+MetricHasBeenChanged+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+
-		// -~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+~-=-~+
+		// MetricHasBeenChanged
 		for (Entry<String, Double> cluster : averagePerFileCon.entrySet()) {
 			if (solutionClusterName2FileName.get(cluster.getKey()).size() != 0)
 				clusterScored.put(cluster.getKey(), (cluster.getValue() / averageToCliqueCon.get(cluster.getKey()))
 						* solutionClusterName2FileName.get(cluster.getKey()).size());
-			// clusterScored.put(
-			// cluster.getKey(),
-			// (cluster.getValue() / (averageToCliqueCon.get(cluster.getKey()) + Math.log10(solutionClusterName2FileName.get(
-			// cluster.getKey()).size())))// );
-			// * solutionClusterName2FileName.get(cluster.getKey()).size());
 		}
 		clusterScored = sortByComparatorDouble(clusterScored);
 		List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(clusterScored.entrySet());
@@ -416,7 +323,7 @@ public class Main{
 			if (max < cluster.getValue())
 				max = cluster.getValue();
 
-		// Expectation Calculation ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
+		// Expectation Calculation
 
 		Map<String, Double> clusterExpectation = new HashMap<String, Double>();
 		double meanExpectation = 0.0;
@@ -428,15 +335,7 @@ public class Main{
 		}
 		meanExpectation = meanExpectation / clusterExpectation.size();
 		System.out.println("meanExpectation = " + meanExpectation);
-		// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		// ++++++++++++++++++++++++++Expectation Printing+++++++++++++++++++++++++
-		// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		// for (Entry<String, Double> cluster : clusterExpectation.entrySet())
-		// if ((cluster.getValue() / meanExpectation) > 10)
-		// System.out.format("%85s\t%15f\n", cluster.getKey(), cluster.getValue());
 
-		// Result print out ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
-		// FirstLevelOfReporting~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 		try {
 			new File(Paths.FIRSTLEVELREPORTS + productName).mkdirs();
 			BufferedWriter firstLevelWriter = new BufferedWriter(new FileWriter(Paths.FIRSTLEVELREPORTS + productName + "/"
@@ -532,7 +431,8 @@ public class Main{
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
 		}
-		// ZeroReporting~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
+
+		// ZeroReporting
 		try {
 			new File(Paths.ZEROREPORTS + productName).mkdirs();
 			BufferedWriter ZeroWriter = new BufferedWriter(new FileWriter(Paths.ZEROREPORTS + productName + "/"
@@ -549,7 +449,7 @@ public class Main{
 			treeMap.putAll(fileToCliqueConnectivity);
 			fileToCliqueConnectivity.clear();
 			fileToCliqueConnectivity.putAll(treeMap);
-			// fileToCliqueCluster = sort
+
 			for (Entry<String, Set<String>> finalSelectedCluster : top50PercentileClusters.entrySet()) {
 				ZeroWriter
 						.write(String.format("------------------------------______________________________---------------------------\n"));
@@ -580,7 +480,8 @@ public class Main{
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
 		}
-		// BigReporting~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
+
+		// BigReporting
 		try {
 			top50PercentileClusters.clear();
 			new File(Paths.BIGREPORTS + productName).mkdirs();
@@ -700,52 +601,9 @@ public class Main{
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
 		}
-		// hits.clear();
-		// hits.addAll(VisitedTry);
-		// hits.retainAll(answer);
-		// System.out.println("VisitedTry = " + VisitedTry.size());
-		// System.out.println("Recall (Post connectivity reduction)= " + hits.size() / (double) answer.size());
-		// // bad.add("src/widgets/osd.cpp");
-		// // bad.add("tests/testdebug.cpp");
-		// // bad.add("tests/synchronization/testmasterslavesynchronizationjob.cpp");
-		// // bad.add("tests/synchronization/testunionjob.cpp");
-		// // bad.add("src/covermanager/covermanager.cpp");
-		// // Set<String> a = new HashSet<String>();
-		// // a.addAll(fileInputTokens);
-		// // a.removeAll(bad);
-		// // a.retainAll(finalV);
-		// // fileInputTokens.clear();
-		// // for (String s : a)
-		// // if (!s.contains(".h"))
-		// // fileInputTokens.add(s);
-		// for (String inputFile : fileInputTokens) {
-		// // System.out.println(solutionFileName2ClusterName.get(inputFile));
-		// inputTokensClusters.add(solutionFileName2ClusterName.get(inputFile));
-		// }
-		// Map<String, Map<String, Integer>> weights = countInterClusterRelations(fileRsfMaker.getAllFileRelations(), inputTokensClusters);
-		//
-		// Set<String> clustersFinal = selectClusters(weights, inputTokensClusters);
-		// inputTokensClusters.addAll(clustersFinal);
-		// // System.out.println("Total good Clusters selected " + goodClusters);
-		// Visited.clear();
-		// finalV.removeAll(bad);
-		// Visited.addAll(finalV);
-		// finalV.clear();
-		// for (String s : Visited)
-		// if (GSClusters.contains(solutionFileName2ClusterName.get(s)))
-		// finalV.add(s);
-		// System.out.println("Gold Standard " + answer);
-		// System.out.println("LsaFileTokens at start = " + fileLsaTokens.size());
-		// System.out.println("LsaFileTokens after expansion " + finalV.size());
-		// hits = new HashSet<String>();
-		// hits.addAll(finalV);
-		// hits.retainAll(answer);
-		// System.out.println("Recall (Post Cluster reduction)= " + hits.size() / (double) answer.size());
-
 	}
 
 	private Map<String, Set<String>> rearrangeClusters(Set<String> clustersToBreakDown, Set<String> clique){
-		// System.out.println("Max Cluster Size = " + maxClusterSize);
 		Map<String, Map<String, Integer>> perClusterCliqueConnectivity = new HashMap<String, Map<String, Integer>>();
 		Map<String, Set<String>> allSplitClusters = new HashMap<String, Set<String>>();
 		Set<String> cliqueCluster = new HashSet<String>();
@@ -790,21 +648,19 @@ public class Main{
 			}
 			perClusterCliqueConnectivity.put(cluster, sortByComparator(perClusterCliqueConnectivity.get(cluster)));
 		}
-		// up to here is OK
-		// rearrange part
+
+		// rearrange part?
 		Map<String, Map<String, Set<String>>> clusterToSmallerClusters = new HashMap<String, Map<String, Set<String>>>();
 		int clusterPartitions = 0;
 		for (Entry<String, Map<String, Integer>> cluster : perClusterCliqueConnectivity.entrySet()) {
 			Map<String, Set<String>> splitClusters = new HashMap<String, Set<String>>();
 			clusterPartitions = Math.floorDiv(solutionClusterName2FileName.get(cluster.getKey()).size(), maxClusterSize) + 1;
-			// System.out.println("clusterPartitions = " + clusterPartitions);
+
 			int nonZeroToCliqueConnectivities = 0;
 			for (Entry<String, Integer> clusterFileToClique : cluster.getValue().entrySet())
 				if (clusterFileToClique.getValue() > 0)
 					nonZeroToCliqueConnectivities++;
 			nonZeroToCliqueConnectivities = Math.floorDiv(nonZeroToCliqueConnectivities, clusterPartitions) + 1;
-			// System.out.println("nonZeroToCliqueConnectivities = " + nonZeroToCliqueConnectivities + " | clusterPreSplitSize = "
-			// + solutionClusterName2FileName.get(cluster.getKey()).size() + " | clusterPartitions = " + clusterPartitions);
 			int i = 0;
 			Set<String> totalUsed = new HashSet<String>();
 			String currentClusterKey = "";
@@ -819,19 +675,15 @@ public class Main{
 					i = (i + 1) % nonZeroToCliqueConnectivities;
 				}
 			}
-			// System.out.println(cluster.getKey() + " " + splitClusters.keySet().size());
+
 			allSplitClusters.putAll(splitClusters);
 
 			clusterToSmallerClusters.put(cluster.getKey(), splitClusters);
 			solutionClusterName2FileName.get(cluster.getKey()).removeAll(totalUsed);
 		}
-		// for (Entry<String, Set<String>> sc : allSplitClusters.entrySet()) {
-		// System.out.println("sc = " + sc.getKey() + " -> " + sc.getValue().size());
-		// }
-		// OK UP TO HERE
-		// ~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-Merging Part~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
-		// ~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
-		// ======================================Initialization of orphansToClustersConnections======================================
+
+		// Merging Part
+		// Initialization of orphansToClustersConnections
 		Map<String, Map<String, Integer>> orphansToClustersConnections = new HashMap<String, Map<String, Integer>>();
 		for (String clusterName : clustersToBreakDown) {
 			for (String orphanName : solutionClusterName2FileName.get(clusterName)) {
@@ -842,7 +694,7 @@ public class Main{
 			}
 		}
 
-		// ++++++++++++++++++++++++++++++++++++Calculation of Connections to parts of new Cluster++++++++++++++++++++++++++++++++++++
+		// Calculation of Connections to parts of new Cluster
 		for (String clusterName : clustersToBreakDown) {
 			for (Entry<String, Map<String, Set<String>>> completeRelation : fileRsfIn.entrySet()) {
 				for (Entry<String, Set<String>> entityToEntities : completeRelation.getValue().entrySet()) {
@@ -879,8 +731,6 @@ public class Main{
 				}
 			}
 		}
-		// for (Entry<String, Set<String>> cl : allSplitClusters.entrySet())
-		// System.out.println(cl.getKey() + " : " + cl.getValue().size());
 		return allSplitClusters;
 	}
 
@@ -894,29 +744,18 @@ public class Main{
 		bad.add("tests/testdebug.cpp");
 		bad.add("tests/synchronization/testmasterslavesynchronizationjob.cpp");
 		bad.add("tests/synchronization/testunionjob.cpp");
-		// bad.add("src/core/support/debug.h");
-		// bad.add("src/covermanager/covermanager.cpp");
-		// bad.add("src/toolbar/maintoolbar.cpp");
-		// bad.add("src/context/applets/albums/albums.cpp");
 		solutionClusterName2FileName = new HashMap<String, Set<String>>();
 		solutionFileName2ClusterName = new HashMap<String, String>();
-		// fileRsf.remove("include");
-		// fileRsf.remove("macrouse");
 		fileRsf.remove("macrodefinition");
-		// fileRsf.remove("sets");
 		fileRsf.remove("methodbelongstoclass");
 		fileRsf.remove("declaredin");
 		fileRsf.remove("hastype");
 		fileRsf.remove("entitylocation");
 		fileRsf.remove("filebelongstomodule");
 		fileRsf.remove("usestype");
-		// fileRsf.remove("accessibleentitybelongstofile");
 		fileRsf.remove("inheritsfrom");
-		// fileRsf.remove("calls");
 		fileRsf.remove("classbelongstofile");
 		fileRsf.remove("definedin");
-		// fileRsf.remove("attributebelongstoclass");
-		// fileRsf.remove("accesses");
 		Set<String> relations = new HashSet<String>();
 		relations.add("calls");
 		relations.add("sets");
@@ -998,9 +837,6 @@ public class Main{
 		} catch (IOException ioe) {
 			System.out.println(ioe.getMessage());
 		}
-		// for (Entry<String, Set<String>> cluster : solutionClusterName2FileName.entrySet())
-		// if (cluster.getValue().size() > 50)
-		// System.out.println(cluster.getKey() + " : " + cluster.getValue().size());
 	}
 
 	private Map<String, Map<String, Integer>> countInterClusterRelations(Map<String, Map<String, Set<String>>> fileRsfIn,
@@ -1141,11 +977,8 @@ public class Main{
 		for (String s : clique) {
 			cliqueCluster.add(solutionFileName2ClusterName.get(s));
 		}
-		// System.out.println(cliqueCluster);
-		// *****************************************************ClusterToCliqueConnectivity************************************************************
-		// --------------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------------
+
+		// ClusterToCliqueConnectivity
 		Map<String, Integer> cliqueClusterConnectivity = new HashMap<String, Integer>();
 		for (String clusterName : solutionClusterName2FileName.keySet())
 			cliqueClusterConnectivity.put(clusterName, new Integer(0));
@@ -1178,10 +1011,7 @@ public class Main{
 					/ (double) solutionClusterName2FileName.get(cluster.getKey()).size());
 		}
 
-		// *********************************************************ClusterConnectivity****************************************************************
-		// --------------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------------
+		// ClusterConnectivity
 		Map<String, Integer> clusterConnectivity = new HashMap<String, Integer>();
 		for (String clusterName : solutionClusterName2FileName.keySet())
 			clusterConnectivity.put(clusterName, new Integer(0));
@@ -1189,18 +1019,12 @@ public class Main{
 			for (Entry<String, Set<String>> entityToEntities : completeRelation.getValue().entrySet()) {
 				for (String s : entityToEntities.getValue()) {
 					if (solutionFileName2ClusterName.containsKey(s) && solutionFileName2ClusterName.containsKey(entityToEntities.getKey())) {
-						// if (solutionFileName2ClusterName.containsKey(s)) {
-						// if (!solutionFileName2ClusterName.get(s).equals(solutionFileName2ClusterName.get(entityToEntities.getKey()))) {
 						clusterConnectivity.put(solutionFileName2ClusterName.get(entityToEntities.getKey()),
 								clusterConnectivity.get(solutionFileName2ClusterName.get(entityToEntities.getKey())) + 1);
 						clusterConnectivity.put(solutionFileName2ClusterName.get(s),
 								clusterConnectivity.get(solutionFileName2ClusterName.get(s)) + 1);
 
 					}
-					// if (solutionFileName2ClusterName.containsKey(entityToEntities.getKey())) {
-					// clusterConnectivity.put(solutionFileName2ClusterName.get(entityToEntities.getKey()),
-					// clusterConnectivity.get(solutionFileName2ClusterName.get(entityToEntities.getKey())) + 1);
-					// }
 				}
 			}
 		}
@@ -1209,10 +1033,7 @@ public class Main{
 			averagePerFileCon
 					.put(cluster.getKey(), cluster.getValue() / (double) solutionClusterName2FileName.get(cluster.getKey()).size());
 		}
-		// *******************************************************FileToCliqueConnectivity*************************************************************
-		// --------------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------------
+		// FileToCliqueConnectivity
 		fileToCliqueClusterConnectivity = new HashMap<String, Double>();
 		for (String fileName : solutionFileName2ClusterName.keySet()) {
 			fileToCliqueClusterConnectivity.put(fileName, new Double(0.0));
@@ -1233,17 +1054,7 @@ public class Main{
 			}
 		}
 		fileToCliqueClusterConnectivity = sortByComparatorDouble(fileToCliqueClusterConnectivity);
-		// System.out
-		// .println("***************************************************fileToCliqueClustersConnectivity***************************************************");
-		// for (Entry<String, Double> e : fileToCliqueClusterConnectivity.entrySet())
-		// if (!answer.contains(e.getKey()))
-		// System.out.format("%85s\t%15f\n", e.getKey(), e.getValue());
-		// else
-		// System.out.format("%85s\t%15f <-------------\n", e.getKey(), e.getValue());
-		// *****************************************************FileToCliqueClusterConnectivity********************************************************
-		// --------------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------------
-		// --------------------------------------------------------------------------------------------------------------------------------------------
+
 		for (String fileName : solutionFileName2ClusterName.keySet()) {
 			fileToCliqueConnectivity.put(fileName, new Double(0.0));
 		}
@@ -1263,13 +1074,6 @@ public class Main{
 			}
 		}
 		fileToCliqueConnectivity = sortByComparatorDouble(fileToCliqueConnectivity);
-		// System.out
-		// .println("***************************************************fileToCliqueConnectivity***************************************************");
-		// for (Entry<String, Double> e : fileToCliqueConnectivity.entrySet())
-		// if (!answer.contains(e.getKey()))
-		// System.out.format("%85s\t%15f\n", e.getKey(), e.getValue());
-		// else
-		// System.out.format("%85s\t%15f <-------------\n", e.getKey(), e.getValue());
 	}
 
 	private Set<String> SelectInGSValues(Map<String, Map<String, Set<String>>> fileRsfIn, Set<String> GSClusters){
@@ -1286,8 +1090,6 @@ public class Main{
 		for (Entry<String, Map<String, Set<String>>> completeRelation : fileRsfIn.entrySet()) {
 			for (Entry<String, Set<String>> fromEntityToEntities : completeRelation.getValue().entrySet()) {
 				for (String toEntity : fromEntityToEntities.getValue()) {
-					// if (!clique.contains(fromEntityToEntities.getKey()) && clique.contains(toEntity)
-					// || clique.contains(fromEntityToEntities.getKey()) && !clique.contains(toEntity)) {
 					if (finalV.contains(fromEntityToEntities.getKey())) {
 						if (completeRelation.getKey().equals("calls"))
 							fileConnectivity.put(fromEntityToEntities.getKey(), fileConnectivity.get(fromEntityToEntities.getKey()) + 1);
@@ -1310,20 +1112,15 @@ public class Main{
 		}
 		for (Entry<String, Integer> forfile : fileConnectivity.entrySet())
 			sum += forfile.getValue();
-		// average = sum / (double) fileConnectivity.size();
 		fileConnectivity = sortByComparator(fileConnectivity);
 		List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(fileConnectivity.entrySet());
-		// int i = fileConnectivity.size();
 		sum = 0;
 		for (Entry<String, Integer> forfile : fileConnectivity.entrySet()) {
 			if (GSClusters.contains(solutionFileName2ClusterName.get(forfile.getKey()))) {
 				if (solutionFileName2ClusterName.get(forfile.getKey()) != null && !forfile.getKey().contains(".h")) {
 					sum += forfile.getValue();
-					// System.out.format("%70s\t%10d\tposition = %10d\n", forfile.getKey(), forfile.getValue(),
-					// (list.size() - list.indexOf(forfile) + 1));
 				}
 			}
-			// mostConnectedFiles.add(forfile.getKey());
 		}
 		Set<String> selectors = new HashSet<String>();
 		for (Entry<String, Integer> entry : list) {
@@ -1335,8 +1132,6 @@ public class Main{
 			if (solutionFileName2ClusterName.containsKey(s))
 				mostConnectedFiles.addAll(solutionClusterName2FileName.get(solutionFileName2ClusterName.get(s)));
 		}
-		// System.out.println("----^^^^****----^^^^****----^^^^****" + solutionClusterName2FileName.size());
-		// System.out.println("****----****----****----****----" + sum);
 		return mostConnectedFiles;
 	}
 
@@ -1352,11 +1147,8 @@ public class Main{
 
 		for (Entry<String, Integer> file : fileConnectivity.entrySet()) {
 			if (solutionFileName2ClusterName.containsKey(file.getKey())) {
-				// System.out.println(solutionFileName2ClusterName.get(file.getKey()) + " - > " + file.getValue());
-				// if (gsClusters.contains(solutionFileName2ClusterName.get(file.getKey()))) {
 				clusterConnectivitySum.put(solutionFileName2ClusterName.get(file.getKey()),
 						clusterConnectivitySum.get(solutionFileName2ClusterName.get(file.getKey())) + file.getValue());
-				// }
 			}
 		}
 		clusterConnectivitySum = sortByComparator(clusterConnectivitySum);
@@ -1365,17 +1157,6 @@ public class Main{
 			averagePerFileCon
 					.put(cluster.getKey(), cluster.getValue() / (double) solutionClusterName2FileName.get(cluster.getKey()).size());
 		}
-
-		// for (Entry<String, Integer> cluster : clusterConnectivitySum.entrySet()) {
-		// if (!gsClusters.contains(cluster.getKey()))
-		// System.out.format("%80s\t%10d\t%10d\t%5f\n", cluster.getKey(), solutionClusterName2FileName.get(cluster.getKey()).size(),
-		// cluster.getValue(), cluster.getValue() / (double) solutionClusterName2FileName.get(cluster.getKey()).size());
-		// else
-		// System.out.format("%80s\t%10d\t%10d\t%5f <-------------------\n", cluster.getKey(),
-		// solutionClusterName2FileName.get(cluster.getKey()).size(), cluster.getValue(), cluster.getValue()
-		// / (double) solutionClusterName2FileName.get(cluster.getKey()).size());
-		// }
-
 	}
 
 	private Map<String, Integer> sortByComparator(Map<String, Integer> unsortMap){
@@ -1470,7 +1251,6 @@ public class Main{
 		allRelsLocal.remove("include");
 		allRelsLocal.remove("macrouse");
 		allRelsLocal.remove("macrodefinition");
-		// allRelsLocal.remove("sets");
 		allRelsLocal.remove("methodbelongstoclass");
 		allRelsLocal.remove("declaredin");
 		allRelsLocal.remove("hastype");
@@ -1479,11 +1259,9 @@ public class Main{
 		allRelsLocal.remove("usestype");
 		allRelsLocal.remove("accessibleentitybelongstofile");
 		allRelsLocal.remove("inheritsfrom");
-		// allRelsLocal.remove("calls");
 		allRelsLocal.remove("classbelongstofile");
 		allRelsLocal.remove("definedin");
 		allRelsLocal.remove("attributebelongstoclass");
-		// allRelsLocal.remove("accesses");
 
 		// Copy the answer Set to a localAnswer set
 		for (String s : answer)
@@ -1499,7 +1277,7 @@ public class Main{
 		localAnswer.removeAll(fileLsaTokens);
 		Visited.addAll(currentFrontier);
 		int step = 0;
-		while (!currentFrontier.isEmpty() && /* !localAnswer.isEmpty() */step < 1) {
+		while (!currentFrontier.isEmpty() && step < 1) {
 			for (Entry<String, Map<String, Set<String>>> completeRelation : allRelsLocal.entrySet()) {
 				for (String s : currentFrontier) {
 					if (completeRelation.getValue().containsKey(s)) {
@@ -1526,5 +1304,4 @@ public class Main{
 		System.out.println("Total expansion Steps = " + step);
 		return Visited;
 	}
-
 }
