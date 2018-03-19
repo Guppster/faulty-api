@@ -8,14 +8,14 @@ import gr.ntua.softlab.solutionspaceclustering.ThreadTest;
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class Main
 {
-    public static final double RANKING_SELECTION_MODIFIER = 0.15;
+    private static final double RANKING_SELECTION_MODIFIER = 0.15;
     private final int maxClusterSize = 5;
     private final Map<String, String> fileNames2Cluster = new HashMap<>();
     private final Map<String, Set<String>> clusterName2FileName = new HashMap<>();
-    private final Set<String> clique = new HashSet<>();
     private final Set<String> unusedRelations = new HashSet<>();
     private final Set<String> bad = new HashSet<>();
     private final Map<String, Double> averagePerFileCon = new HashMap<>();
@@ -154,8 +154,6 @@ public class Main
                     if (allFileRelationsReversed.containsKey(completeRelation.getKey()))
                     {
                         //If it is, that means we have encountered this relationship before
-
-                        //Find if
                         if (allFileRelationsReversed.get(completeRelation.getKey()).containsKey(targetEntity))
                         {
                             allFileRelationsReversed.get(completeRelation.getKey()).get(targetEntity).add(entityToEntities.getKey());
@@ -266,66 +264,59 @@ public class Main
 
     private void outputURanked()
     {
-        Set<String> Visited = new HashSet<>();
+        //Backup the files?
+        Set<String> Visited = finalV.stream().filter(s -> !s.contains(".h")).collect(Collectors.toSet());
 
-        clique.clear();
-
-        for (String s : finalV)
-        {
-            if (!s.contains(".h"))
-            {
-                Visited.add(s);
-            }
-        }
-
+        //Clear it?
         finalV.clear();
+
+        //Add them back?
         finalV.addAll(Visited);
 
-        Map<String, Map<String, Set<String>>> fileRsfIn = new HashMap<>(fileRsfMaker.getAllFileRelations());
+        //Get all relationships from rsf
+        Map<String, Map<String, Set<String>>> relationships = fileRsfMaker.getAllFileRelations();
 
-        for (String s : unusedRelations)
-        {
-            fileRsfIn.remove(s);
-        }
+        //Remove unused relationships from set of all file relationships
+        unusedRelations.forEach(relationships::remove);
 
-        clique.addAll(selectMostConnected(fileRsfMaker.getAllFileRelations(), finalV));
+        Set<String> clique = new HashSet<>(selectMostConnected(fileRsfMaker.getAllFileRelations(), finalV));
 
         System.out.println("clique size = " + clique.size());
 
-        for (String fileName : finalV)
-        {
-            fileToCliqueConnectivity.put(fileName, 0.0);
-        }
+        finalV.forEach(fileName -> fileToCliqueConnectivity.put(fileName, 0.0));
 
-        for (Entry<String, Map<String, Set<String>>> completeRelation : fileRsfIn.entrySet())
-        {
-            for (Entry<String, Set<String>> entityToEntities : completeRelation.getValue().entrySet())
-            {
-                for (String s : entityToEntities.getValue())
-                {
-                    if (finalV.contains(s))
-                    {
-                        fileToCliqueConnectivity.put(s, fileToCliqueConnectivity.get(s) + 1);
-                    }
-                    else if (finalV.contains(entityToEntities.getKey()))
-                    {
-                        fileToCliqueConnectivity.put(entityToEntities.getKey(), fileToCliqueConnectivity.get(entityToEntities.getKey()) + 1);
-                    }
-                }
-            }
-        }
+        //For each entity value, in each entitySet, in each relationship
+        relationships.forEach(
+                (relationshipName, entityMap) -> entityMap.forEach(
+                        (entity, entitySet) -> entitySet.forEach(
+                                entityValue ->
+                                {
+                                    //If the final set contains the entity value as a key add 1 to its value
+                                    if (finalV.contains(entityValue))
+                                    {
+                                        fileToCliqueConnectivity.put(entityValue, fileToCliqueConnectivity.get(entityValue) + 1);
+                                    }
+                                    //If the final set contains the entity key as a key add 1 to its value
+                                    else if (finalV.contains(entity))
+                                    {
+                                        fileToCliqueConnectivity.put(entity, fileToCliqueConnectivity.get(entity) + 1);
+                                    }
+                                })));
+
+        //Sort by weight
         fileToCliqueConnectivity = sortByComparatorDouble(fileToCliqueConnectivity);
 
         Map<String, Double> treeMap = new TreeMap<>(Comparator.reverseOrder());
 
         treeMap.putAll(fileToCliqueConnectivity);
 
+        //Outputting results to file and standard out
         try
         {
+            //TODO: Get rid of hardcoded directories
             new File(Paths.URANKEDREPORTS + productName).mkdirs();
 
             BufferedWriter URankedWriter = new BufferedWriter
-
                     (new FileWriter(Paths.URANKEDREPORTS + productName + "/" + currentFileName.split("_")[0] + ".csv"));
 
             System.out.println(currentFileName.split("_")[0]);
