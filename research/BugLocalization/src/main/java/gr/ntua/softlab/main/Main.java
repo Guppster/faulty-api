@@ -11,29 +11,30 @@ import java.util.Map.Entry;
 
 public class Main
 {
+    public static final double RANKING_SELECTION_MODIFIER = 0.15;
     private final int maxClusterSize = 5;
+    private final Map<String, String> fileNames2Cluster = new HashMap<>();
+    private final Map<String, Set<String>> clusterName2FileName = new HashMap<>();
+    private final Set<String> clique = new HashSet<>();
+    private final Set<String> unusedRelations = new HashSet<>();
+    private final Set<String> bad = new HashSet<>();
+    private final Map<String, Double> averagePerFileCon = new HashMap<>();
+    private final Map<String, Double> averageToCliqueCon = new HashMap<>();
+    private final Set<String> finalV = new HashSet<>();
     private String productName;
     private FileRsfMaker fileRsfMaker;
     private InputReader inputReader;
     private Set<String> answer = new HashSet<>();
     private Set<String> lsaTokens = new HashSet<>();
     private Set<String> inputTokens = new HashSet<>();
-    private Set<String> fileLsaTokens = new HashSet<>();
-    private final Map<String, String> fileNames2Cluster = new HashMap<>();
-    private final Map<String, Set<String>> clusterName2FileName = new HashMap<>();
-    private final Set<String> clique = new HashSet<>();
-    private final Set<String> unusedRelations = new HashSet<>();
-    private final Set<String> bad = new HashSet<>();
+    private Set<String> lsaTokenFiles = new HashSet<>();
     private Map<String, Map<String, Set<String>>> allFileRelationsReversed;
-    private final Map<String, Double> averagePerFileCon = new HashMap<>();
-    private final Map<String, Double> averageToCliqueCon = new HashMap<>();
     private Map<String, Double> fileToCliqueClusterConnectivity = new HashMap<>();
     private Map<String, Double> fileToCliqueConnectivity = new HashMap<>();
     private String currentFileName = "";
     private Map<String, Set<String>> solutionClusterName2FileName;
     private Map<String, String> solutionFileName2ClusterName;
-    private final Set<String> finalV = new HashSet<>();
-    private Set<String> fileInputTokens;
+    private Set<String> inputTokenFiles;
 
     public static void main(String[] args)
     {
@@ -98,11 +99,11 @@ public class Main
             return false;
         }
 
+        answer = inputReader.getAnswer();
+
         //answer is now the intersect of answer and fileRsfMaker entity names
         //Making sure the tokens are an rsf entity
         answer.retainAll(fileRsfMaker.getEntityNameToFileNames().keySet());
-
-        answer = inputReader.getAnswer();
 
         lsaTokens = inputReader.getLsaTokens();
 
@@ -116,128 +117,144 @@ public class Main
         //Making sure the tokens are an rsf entity
         inputTokens.retainAll(fileRsfMaker.getEntityNameToFileNames().keySet());
 
+        //Move on to the current file
         currentFileName = inputReader.getFilename();
 
+        //Generate a different view into the RSF structure
         reverseAllFileRelations();
-        constructSolutionSpace();
+
+        //Prepare resources for processing
+        gatherSolutionFiles();
+
         performRanking();
 
         //Indicate that there may be more bug reports to process
         return true;
     }
 
-    private void constructSolutionSpace()
-    {
-        // make fileLsaTokens
-        fileLsaTokens = new HashSet<>();
-
-        Map<String, Set<String>> entityNameToFileNames = fileRsfMaker.getEntityNameToFileNames();
-
-        for (String token : lsaTokens)
-        {
-            if (fileRsfMaker.getEntityNameToFileNames().containsKey(token))
-            {
-                fileLsaTokens.addAll(fileRsfMaker.getEntityNameToFileNames().get(token));
-            }
-
-            fileLsaTokens.retainAll(fileRsfMaker.getAllRelations().get("filebelongstomodule").keySet());
-        }
-
-        // Make fileInputTokens and remove the GoldStandard
-        fileInputTokens = new HashSet<>();
-
-        for (String s : inputTokens)
-        {
-            fileInputTokens.addAll(entityNameToFileNames.get(s));
-            fileInputTokens.retainAll(fileRsfMaker.getAllRelations().get("filebelongstomodule").keySet());
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private void makeFilename2Parts()
-    {
-        for (String s : fileNames2Cluster.keySet())
-        {
-            for (String w : s.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))
-            {
-                System.out.println(w);
-            }
-            System.out.println("----------------------------------------------------------");
-        }
-    }
-
+    /**
+     * This method takes a Map of <Relationship Name, <Entity Key, Entities related to key Entity>>
+     * and transforms it into <Relationship Name, <Entity value, Entity keys pointing to this value>>
+     * (in)Effectivly reversing the innermap
+     */
     private void reverseAllFileRelations()
     {
         allFileRelationsReversed = new HashMap<>();
 
+        //For each RSF relation (relation name, relationship map)
         for (Entry<String, Map<String, Set<String>>> completeRelation : fileRsfMaker.getAllFileRelations().entrySet())
         {
+            //For each entity relationship map (key entity is related to all value entities)
             for (Entry<String, Set<String>> entityToEntities : completeRelation.getValue().entrySet())
             {
+                //For each entity's value (each entity that is related to the current one)
                 for (String targetEntity : entityToEntities.getValue())
                 {
+                    //Find if the relationship exists in the method's return hashmap
                     if (allFileRelationsReversed.containsKey(completeRelation.getKey()))
                     {
+                        //If it is, that means we have encountered this relationship before
+
+                        //Find if
                         if (allFileRelationsReversed.get(completeRelation.getKey()).containsKey(targetEntity))
                         {
                             allFileRelationsReversed.get(completeRelation.getKey()).get(targetEntity).add(entityToEntities.getKey());
                         }
                         else
                         {
-                            Set<String> toInsert = new HashSet<>();
-                            toInsert.add(entityToEntities.getKey());
+                            Set<String> entityMap = new HashSet<>();
+                            entityMap.add(entityToEntities.getKey());
 
-                            allFileRelationsReversed.get(completeRelation.getKey()).put(targetEntity, toInsert);
+                            allFileRelationsReversed.get(completeRelation.getKey()).put(targetEntity, entityMap);
                         }
                     }
                     else
                     {
-                        Map<String, Set<String>> toInsertMap = new HashMap<>();
-                        Set<String> toInsert = new HashSet<>();
+                        //If the relation is not found in the method's return hashmap, we need to create it
+                        Map<String, Set<String>> relationship = new HashMap<>();
+                        Set<String> entityMap = new HashSet<>();
 
-                        toInsert.add(entityToEntities.getKey());
-                        toInsertMap.put(targetEntity, toInsert);
+                        entityMap.add(entityToEntities.getKey());
+                        relationship.put(targetEntity, entityMap);
 
-                        allFileRelationsReversed.put(completeRelation.getKey(), toInsertMap);
+                        allFileRelationsReversed.put(completeRelation.getKey(), relationship);
                     }
                 }
             }
         }
     }
 
+    /**
+     * Gathers a map of all the files required in the processing of the solution
+     */
+    private void gatherSolutionFiles()
+    {
+        lsaTokenFiles = new HashSet<>();
+        inputTokenFiles = new HashSet<>();
+
+        Map<String, Set<String>> entityToFilenames = fileRsfMaker.getEntityNameToFileNames();
+        Map<String, Map<String, Set<String>>> allRelations = fileRsfMaker.getAllRelations();
+
+        // make lsaTokenFiles
+        for (String lsaToken : lsaTokens)
+        {
+            if (entityToFilenames.containsKey(lsaToken))
+            {
+                lsaTokenFiles.addAll(entityToFilenames.get(lsaToken));
+            }
+
+            lsaTokenFiles.retainAll(allRelations.get("filebelongstomodule").keySet());
+        }
+
+        // Make inputTokenFiles and remove the GoldStandard
+        for (String inputToken : inputTokens)
+        {
+            inputTokenFiles.addAll(entityToFilenames.get(inputToken));
+            inputTokenFiles.retainAll(allRelations.get("filebelongstomodule").keySet());
+        }
+    }
+
+    /**
+     * Print the filename in two parts
+     */
+    @SuppressWarnings("unused")
+    private void makeFilename2Parts()
+    {
+        for (String filenameString : fileNames2Cluster.keySet())
+        {
+            Arrays.stream(filenameString.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))
+                    .forEach(System.out::println);
+
+            System.out.println("----------------------------------------------------------");
+        }
+    }
+
     private void performRanking()
     {
-        Set<String> Visited = new HashSet<>(expandeTokenSet(fileLsaTokens));
+        //TODO: Remove terrible use of global variable
+        finalV.addAll(expandeTokenSet(lsaTokenFiles));
 
-        finalV.addAll(Visited);
+        //Stores names of all files belonging to this module
+        Set<String> files = new HashSet<>(fileRsfMaker.getAllRelations().get("filebelongstomodule").keySet());
 
-        Set<String> temp = new HashSet<>(fileRsfMaker.getAllRelations().get("filebelongstomodule").keySet());
+        //Numebr of files that don't contain .h suffix
+        double numberOfNonHeaderFiles = files.stream()
+                .filter(s -> !s.contains(".h"))
+                .count();
 
-        int c = 0;
+        System.out.println("Total System Files = " + files.size());
+        System.out.println("Total non .h Files = " + numberOfNonHeaderFiles);
 
-        for (String s : temp)
-        {
-            if (!s.contains(".h"))
-            {
-                c++;
-            }
-        }
+        //Same count as before but this time done on the final expanded set
+        double nonLibraryFilesInExpansion = finalV
+                .stream()
+                .filter(s -> !s.contains(".h"))
+                .count();
 
-        System.out.println("Total System Files = " + temp.size());
-        System.out.println("Total non .h Files = " + c);
+        System.out.println("Total non .h Files from Expansion= " + nonLibraryFilesInExpansion);
 
-        Set<String> nonLibraries = new HashSet<>();
-        for (String s : finalV)
-        {
-            if (!s.contains(".h"))
-            {
-                nonLibraries.add(s);
-            }
-        }
-
-        System.out.println("Total non .h Files from Expansion= " + nonLibraries.size());
-
-        if (nonLibraries.size() < 0.15 * (double) c)
+        //Some magic algorithm selection here
+        if (nonLibraryFilesInExpansion < (RANKING_SELECTION_MODIFIER * numberOfNonHeaderFiles))
         {
             outputURanked();
         }
@@ -346,14 +363,14 @@ public class Main
         Set<String> hits = new HashSet<>(finalV);
 
         // Recall before applying anything but the expansion step and without removing the .h files
-        System.out.println("LsaFileTokens at start = " + fileLsaTokens.size());
+        System.out.println("LsaFileTokens at start = " + lsaTokenFiles.size());
         System.out.println("LsaFileTokens after expansion " + finalV.size());
 
         hits.retainAll(answer);
 
         System.out.println("Recall (Pre reduction)= " + hits.size() / (double) answer.size());
 
-        fileInputTokens.removeAll(bad);
+        inputTokenFiles.removeAll(bad);
 
         clique.addAll(selectMostConnected(fileRsfMaker.getAllFileRelations(), finalV));
 
@@ -1637,11 +1654,11 @@ public class Main
         answer.retainAll(localAnswer);
 
         // Initialize the search frontier for the DFS expansion algorithm
-        Set<String> nextFrontier = new HashSet<>(fileLsaTokens);
+        Set<String> nextFrontier = new HashSet<>(lsaTokenFiles);
         Set<String> currentFrontier = new HashSet<>(nextFrontier);
 
         nextFrontier.clear();
-        localAnswer.removeAll(fileLsaTokens);
+        localAnswer.removeAll(lsaTokenFiles);
 
         Set<String> Visited = new HashSet<>(currentFrontier);
 
