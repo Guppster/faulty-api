@@ -13,15 +13,13 @@ fun main(args: Array<String>)
         port(PORT)
     }.start()
 
+    val apiController = APIController()
+
     //The root path
     app.routes{
-
-        path("")
+        path("/event-handler")
         {
-        }
-
-        path("beepboop")
-        {
+           post(apiController::eventHandler)
         }
     }
 }
