@@ -68,6 +68,7 @@ public class Main
         //Find the cluster from the fliename
         fileNames2Cluster.putAll(inputReader.getFileNames2Clusters());
 
+
         //Find the file from the cluster
         clusterName2FileName.putAll(inputReader.getClusterName2FileName());
 
@@ -87,7 +88,7 @@ public class Main
 
         while (prepareNextReport())
         {
-            System.out.println("------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("--------------------------------------");
         }
     }
 
@@ -101,7 +102,7 @@ public class Main
             return false;
         }
 
-        answer = inputReader.getAnswer();
+        answer = inputReader.getAnswers();
 
         //answer is now the intersect of answer and fileRsfMaker entity names
         //Making sure the tokens are an rsf entity
@@ -137,7 +138,7 @@ public class Main
     /**
      * This method takes a Map of <Relationship Name, <Entity Key, Entities related to key Entity>>
      * and transforms it into <Relationship Name, <Entity value, Entity keys pointing to this value>>
-     * (in)Effectivly reversing the innermap
+     * (in)Effectively reversing the inner-map
      */
     private void reverseAllFileRelations()
     {

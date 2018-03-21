@@ -19,6 +19,8 @@ public class Paths
     public static final String ZEROREPORTS = "../../Data_FileSystem/Reports/Zero_Reports/";
     public static final String BIGREPORTS = "../../Data_FileSystem/Reports/Big_Reports/";
     public static final String URANKEDREPORTS = "../../Data_FileSystem/Reports/U_Ranked_Reports/";
+
+    //UNUSED
     public static String AUXILIARY_RSF_FOLDER = "../../Data_FileSystem/Auxiliary_RSFS/";
     public static String OUTPUT_FOLDER = "../../Data_FileSystem/File_RSFS/";
     public static String ACDC_PATH = "../../Data_FileSystem/CLUSTERED_SYSTEMS/";

@@ -22,10 +22,10 @@ public class InputReader
     private String[] filenames;
     private String[] BugReports;
     private ArrayList<Integer> BugNumbers;
-    private int i = - 1;
+    private int i = -1;
     private String filename;
     private ArrayList<String> lsaTokens;
-    private Set<String> answer = new HashSet<>();
+    private Set<String> answers = new HashSet<>();
     private Map<String, String> fileName2Cluster;
     private Map<String, Set<String>> clusterName2fileName;
 
@@ -42,7 +42,8 @@ public class InputReader
     {
         BufferedReader ansbr;
         File answers = new File(Paths.GOLDSTANDARD + productName + "/" + BugNumbers.get(Bug_ID) + "_sol.txt");
-        answer = new HashSet<>();
+        this.answers = new HashSet<>();
+
         try
         {
             ansbr = new BufferedReader(new FileReader(answers));
@@ -51,7 +52,7 @@ public class InputReader
                 String s = ansbr.readLine().toLowerCase();
                 if (rsfRepresentation.isEntity(s))
                 {
-                    answer.add(s);
+                    this.answers.add(s);
                 }
             }
             ansbr.close();
@@ -60,7 +61,8 @@ public class InputReader
         {
             System.out.println(ioe.getMessage());
         }
-        return answer;
+
+        return this.answers;
     }
 
     private void makeNameArrays(ArrayList<Integer> BugNumbers)
@@ -104,10 +106,11 @@ public class InputReader
 
     private void readLsaInput()
     {
-        answer = CompileAnswers(i);
-        try
+        answers = CompileAnswers(i);
+
+        try (BufferedReader lsaInputReader = new BufferedReader(new FileReader(
+                Paths.FINALINPUTBRS + productName + "/input/" + filename)))
         {
-            BufferedReader lsaInputReader = new BufferedReader(new FileReader(Paths.FINALINPUTBRS + productName + "/input/" + filename));
             lsaTokens = new ArrayList<>();
             String Entity;
             while (lsaInputReader.ready())
@@ -115,35 +118,32 @@ public class InputReader
                 Entity = lsaInputReader.readLine();
                 lsaTokens.add(Entity);
             }
-            lsaInputReader.close();
-            for (String s : answer)
-            {
-                lsaTokens.remove(s);
-            }
         }
-        catch (IOException ioe)
+        catch (IOException e)
         {
-            System.out.println(ioe.getMessage());
+            e.printStackTrace();
+        }
+
+        for (String answer : answers)
+        {
+            lsaTokens.remove(answer);
         }
     }
 
     private void readInputBugReport()
     {
-        try
+        try (BufferedReader inputBugReportReader = new BufferedReader(new FileReader(Paths.QUERYBRS + productName + "/" + BugReport)))
         {
-            BufferedReader inputBugReportReader = new BufferedReader(new FileReader(Paths.QUERYBRS + productName + "/" + BugReport));
-
             while (inputBugReportReader.ready())
             {
                 inputTokens.add(inputBugReportReader.readLine());
             }
 
-            inputTokens.removeAll(answer);
-            inputBugReportReader.close();
+            inputTokens.removeAll(answers);
         }
-        catch (IOException ioe)
+        catch (IOException e)
         {
-            System.out.println(ioe.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -158,8 +158,8 @@ public class InputReader
 
             System.out.println(filename);
 
-            answer.clear();
-            answer.addAll(CompileAnswers(i));
+            answers.clear();
+            answers.addAll(CompileAnswers(i));
 
             readLsaInput();
             readInputBugReport();
@@ -175,12 +175,10 @@ public class InputReader
         fileName2Cluster = new HashMap<>();
         clusterName2fileName = new HashMap<>();
 
-        try
+        //Prepare reader for productName
+        try (BufferedReader clustersReader = new BufferedReader(
+                new FileReader(Paths.ACDC_OUTPUT_PATH + productName + "_file_final_acdc.rsf")))
         {
-            //Prepare reader for productName
-            BufferedReader clustersReader = new BufferedReader(
-                    new FileReader(Paths.ACDC_OUTPUT_PATH + productName + "_file_final_acdc.rsf"));
-
             //Wait till the file is ready to read (not needed)
             while (clustersReader.ready())
             {
@@ -204,9 +202,9 @@ public class InputReader
 
             clustersReader.close();
         }
-        catch (IOException ioe)
+        catch (IOException e)
         {
-            System.out.println(ioe.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -215,9 +213,9 @@ public class InputReader
         return new HashSet<>(lsaTokens);
     }
 
-    public Set<String> getAnswer()
+    public Set<String> getAnswers()
     {
-        return answer;
+        return answers;
     }
 
     public String getFilename()
