@@ -5,6 +5,8 @@ import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import io.javalin.Context
+import org.kohsuke.github.GHDeploymentBuilder
+import org.kohsuke.github.GitHubBuilder
 
 //Github event constants
 private const val PULL_REQUEST = "pull_request"
@@ -37,23 +39,48 @@ class APIController
         }
     }
 
-    fun pullRequestOperation(jsonObject: Map<String, Any>?)
+    private fun pullRequestOperation(jsonObject: Map<String, Any>?)
     {
+        val pullRequestInfo = jsonObject!!["pull_request"] as Map<String, Any>
+
         //Check if PR or issue is opened
-        //if it is call startDeployment()
+        if (jsonObject["action"].toString() == "closed" && pullRequestInfo["merged"] as Boolean)
+        {
+            println("A pull request was merged! A deployment should start now...")
+
+            //if it is call startDeployment()
+            startDeployment(pullRequestInfo)
+        }
+
+
     }
 
-    fun startDeployment(jsonObject: Map<String, Any>?)
+    private fun startDeployment(jsonObject: Map<String, Any>?)
+    {
+        val user = (jsonObject!!["user"] as Map<*, *>)["login"] as String
+        val headMap = jsonObject["head"] as Map<*, *>
+
+        val payloadMap = mapOf("environment" to "QA", "deploy_user" to user)
+        val payload = adapter.toJson(payloadMap)
+
+        val gitHub = GitHubBuilder.fromEnvironment().build()
+
+        val repository = gitHub.getRepository(((
+                headMap["repo"] as Map<*, *>)
+                ["full_name"] as String))
+
+        var deployment = GHDeploymentBuilder(repository, (headMap["sha"] as String))
+                .description("Auto Deploy after merge")
+                .autoMerge(false)
+                .create()
+    }
+
+    private fun processDeployment(jsonObject: Map<String, Any>?)
     {
 
     }
 
-    fun processDeployment(jsonObject: Map<String, Any>?)
-    {
-
-    }
-
-    fun updateDeploymentStatus(jsonObject: Map<String, Any>?)
+    private fun updateDeploymentStatus(jsonObject: Map<String, Any>?)
     {
 
     }
