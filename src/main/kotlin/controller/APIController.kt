@@ -6,6 +6,9 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import io.javalin.Context
 import org.kohsuke.github.GHDeploymentBuilder
+import org.kohsuke.github.GHDeploymentState.PENDING
+import org.kohsuke.github.GHDeploymentState.SUCCESS
+import org.kohsuke.github.GHDeploymentStatusBuilder
 import org.kohsuke.github.GitHubBuilder
 
 //Github event constants
@@ -51,8 +54,6 @@ class APIController
             //if it is call startDeployment()
             startDeployment(pullRequestInfo)
         }
-
-
     }
 
     private fun startDeployment(jsonObject: Map<String, Any>?)
@@ -65,23 +66,41 @@ class APIController
 
         val gitHub = GitHubBuilder.fromEnvironment().build()
 
-        val repository = gitHub.getRepository(((
-                headMap["repo"] as Map<*, *>)
-                ["full_name"] as String))
+        val repository = gitHub.getRepository(((headMap["repo"] as Map<*, *>)["full_name"] as String))
 
-        var deployment = GHDeploymentBuilder(repository, (headMap["sha"] as String))
-                .description("Auto Deploy after merge")
-                .autoMerge(false)
-                .create()
+        var deployment = GHDeploymentBuilder(repository,
+                (headMap["sha"] as String)).description("Auto Deploy after merge").autoMerge(false).create()
     }
 
     private fun processDeployment(jsonObject: Map<String, Any>?)
     {
+        var deploymentMap = jsonObject!!["deployment"] as Map<*, *>
+        val payloadString = deploymentMap["payload"] as String
 
+        val payload = adapter.fromJson(payloadString)
+
+        println("Processing ${deploymentMap["description"] as String} for ${payload!!["deploy_user"] as String} to ${payload["environment"] as String}")
+
+        Thread.sleep(2000L)
+
+        val gitHub = GitHubBuilder.fromEnvironment().build()
+
+        val repository = gitHub.getRepository(((jsonObject["repository"] as Map<*, *>)["full_name"] as String))
+
+        var deploymentStatusInitial = GHDeploymentStatusBuilder(repository,
+                deploymentMap["id"] as Int,
+                PENDING).create()
+
+        Thread.sleep(5000L)
+
+        var deploymentStatusFinal = GHDeploymentStatusBuilder(repository, deploymentMap["id"] as Int, SUCCESS).create()
     }
 
     private fun updateDeploymentStatus(jsonObject: Map<String, Any>?)
     {
+        val deploymentMap = jsonObject!!["deployment"] as Map<*, *>
+        val deploymentStatus = jsonObject!!["deployment"] as Map<*, *>
 
+        println("Deployment status for ${deploymentMap["id"] as String} is ${deploymentStatus["state"] as String}")
     }
 }
