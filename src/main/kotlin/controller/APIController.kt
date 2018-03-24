@@ -16,12 +16,15 @@ private const val PULL_REQUEST = "pull_request"
 private const val DEPLOYMENT = "DEPLOYMENT"
 private const val DEPLOYMENT_STATUS = "DEPLOYMENT_STATUS"
 
+typealias jsonMap = Map<*, *>
+
 class APIController
 {
     //Setup to read the incoming Github JSON
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     private val genericJSON = Types.newParameterizedType(Map::class.java, String::class.java, Object::class.java)
     private var adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(genericJSON)
+
 
     /**
      * Route incoming webhooks depending on header and parse json
@@ -36,15 +39,15 @@ class APIController
         //Decide what to do with it
         when (githubEvent)
         {
-            PULL_REQUEST -> pullRequestOperation(jsonMap)
-            DEPLOYMENT -> processDeployment(jsonMap)
-            DEPLOYMENT_STATUS -> updateDeploymentStatus(jsonMap)
+            PULL_REQUEST -> pullRequestOperation(jsonMap!!)
+            DEPLOYMENT -> processDeployment(jsonMap!!)
+            DEPLOYMENT_STATUS -> updateDeploymentStatus(jsonMap!!)
         }
     }
 
-    private fun pullRequestOperation(jsonObject: Map<String, Any>?)
+    private fun pullRequestOperation(jsonObject: jsonMap)
     {
-        val pullRequestInfo = jsonObject!!["pull_request"] as Map<String, Any>
+        val pullRequestInfo = jsonObject["pull_request"] as jsonMap
 
         //Check if PR or issue is opened
         if (jsonObject["action"].toString() == "closed" && pullRequestInfo["merged"] as Boolean)
@@ -56,25 +59,25 @@ class APIController
         }
     }
 
-    private fun startDeployment(jsonObject: Map<String, Any>?)
+    private fun startDeployment(jsonObject: jsonMap)
     {
-        val user = (jsonObject!!["user"] as Map<*, *>)["login"] as String
-        val headMap = jsonObject["head"] as Map<*, *>
+        val user = (jsonObject["user"] as jsonMap)["login"] as String
+        val headMap = jsonObject["head"] as jsonMap
 
         val payloadMap = mapOf("environment" to "QA", "deploy_user" to user)
         val payload = adapter.toJson(payloadMap)
 
         val gitHub = GitHubBuilder.fromEnvironment().build()
 
-        val repository = gitHub.getRepository(((headMap["repo"] as Map<*, *>)["full_name"] as String))
+        val repository = gitHub.getRepository(((headMap["repo"] as jsonMap)["full_name"] as String))
 
         var deployment = GHDeploymentBuilder(repository,
                 (headMap["sha"] as String)).description("Auto Deploy after merge").autoMerge(false).create()
     }
 
-    private fun processDeployment(jsonObject: Map<String, Any>?)
+    private fun processDeployment(jsonObject: jsonMap)
     {
-        var deploymentMap = jsonObject!!["deployment"] as Map<*, *>
+        val deploymentMap = jsonObject["deployment"] as jsonMap
         val payloadString = deploymentMap["payload"] as String
 
         val payload = adapter.fromJson(payloadString)
@@ -85,7 +88,7 @@ class APIController
 
         val gitHub = GitHubBuilder.fromEnvironment().build()
 
-        val repository = gitHub.getRepository(((jsonObject["repository"] as Map<*, *>)["full_name"] as String))
+        val repository = gitHub.getRepository(((jsonObject["repository"] as jsonMap)["full_name"] as String))
 
         var deploymentStatusInitial = GHDeploymentStatusBuilder(repository,
                 deploymentMap["id"] as Int,
@@ -96,10 +99,10 @@ class APIController
         var deploymentStatusFinal = GHDeploymentStatusBuilder(repository, deploymentMap["id"] as Int, SUCCESS).create()
     }
 
-    private fun updateDeploymentStatus(jsonObject: Map<String, Any>?)
+    private fun updateDeploymentStatus(jsonObject: jsonMap)
     {
-        val deploymentMap = jsonObject!!["deployment"] as Map<*, *>
-        val deploymentStatus = jsonObject!!["deployment"] as Map<*, *>
+        val deploymentMap = jsonObject["deployment"] as jsonMap
+        val deploymentStatus = jsonObject["deployment"] as jsonMap
 
         println("Deployment status for ${deploymentMap["id"] as String} is ${deploymentStatus["state"] as String}")
     }
