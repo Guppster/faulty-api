@@ -38,7 +38,7 @@ public class InputReader
         readClusters();
     }
 
-    private Set<String> CompileAnswers(int Bug_ID)
+    private Set<String> compileAnswers(int Bug_ID)
     {
         BufferedReader ansbr;
         File answers = new File(Paths.GOLDSTANDARD + productName + "/" + BugNumbers.get(Bug_ID) + "_sol.txt");
@@ -106,7 +106,7 @@ public class InputReader
 
     private void readLsaInput()
     {
-        answers = CompileAnswers(i);
+        answers = compileAnswers(i);
 
         try (BufferedReader lsaInputReader = new BufferedReader(new FileReader(
                 Paths.FINALINPUTBRS + productName + "/input/" + filename)))
@@ -159,7 +159,7 @@ public class InputReader
             System.out.println(filename);
 
             answers.clear();
-            answers.addAll(CompileAnswers(i));
+            answers.addAll(compileAnswers(i));
 
             readLsaInput();
             readInputBugReport();
@@ -186,26 +186,28 @@ public class InputReader
                 fileName2Cluster.put(rsfRepresentation.getName(tokens[2]), rsfRepresentation.getName(tokens[1].split("\\.")[0]));
             }
 
-            for (Entry<String, String> file2Cluster : fileName2Cluster.entrySet())
-            {
-                if (clusterName2fileName.containsKey(file2Cluster.getValue()))
-                {
-                    clusterName2fileName.get(file2Cluster.getValue()).add(file2Cluster.getKey());
-                }
-                else
-                {
-                    Set<String> toInsert = new HashSet<>();
-                    toInsert.add(file2Cluster.getKey());
-                    clusterName2fileName.put(file2Cluster.getValue(), toInsert);
-                }
-            }
-
             clustersReader.close();
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
+
+        //Flip the relation
+        for (Entry<String, String> file2Cluster : fileName2Cluster.entrySet())
+        {
+            if (clusterName2fileName.containsKey(file2Cluster.getValue()))
+            {
+                clusterName2fileName.get(file2Cluster.getValue()).add(file2Cluster.getKey());
+            }
+            else
+            {
+                Set<String> toInsert = new HashSet<>();
+                toInsert.add(file2Cluster.getKey());
+                clusterName2fileName.put(file2Cluster.getValue(), toInsert);
+            }
+        }
+
     }
 
     public Set<String> getLsaTokens()

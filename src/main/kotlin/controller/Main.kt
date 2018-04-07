@@ -21,5 +21,10 @@ fun main(args: Array<String>)
         {
            post(apiController::eventHandler)
         }
+
+        path("")
+        {
+            get("/"){ctx -> ctx.result ("Welcome to Faulty")}
+        }
     }
 }

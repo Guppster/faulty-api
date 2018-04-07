@@ -22,6 +22,8 @@ public class Main
     private final Set<String> bad = new HashSet<>();
     private final Map<String, Double> averagePerFileCon = new HashMap<>();
     private final Map<String, Double> averageToCliqueCon = new HashMap<>();
+
+    //Contains the final set of tokens before the analysis.
     private final Set<String> finalV = new HashSet<>();
     private String productName;
     private FileRsfMaker fileRsfMaker;
@@ -67,7 +69,6 @@ public class Main
 
         //Find the cluster from the fliename
         fileNames2Cluster.putAll(inputReader.getFileNames2Clusters());
-
 
         //Find the file from the cluster
         clusterName2FileName.putAll(inputReader.getClusterName2FileName());
@@ -139,6 +140,8 @@ public class Main
      * This method takes a Map of <Relationship Name, <Entity Key, Entities related to key Entity>>
      * and transforms it into <Relationship Name, <Entity value, Entity keys pointing to this value>>
      * (in)Effectively reversing the inner-map
+     *
+     * This reverse map is used while expanding the token set during the ranking process
      */
     private void reverseAllFileRelations()
     {
@@ -157,12 +160,15 @@ public class Main
                     if (allFileRelationsReversed.containsKey(completeRelation.getKey()))
                     {
                         //If it is, that means we have encountered this relationship before
+                        //Now check to see if the relationship contains this specific entity key.
                         if (allFileRelationsReversed.get(completeRelation.getKey()).containsKey(targetEntity))
                         {
+                            //If so add to it's value
                             allFileRelationsReversed.get(completeRelation.getKey()).get(targetEntity).add(entityToEntities.getKey());
                         }
                         else
                         {
+                            //Else create a new Map for its value so we can add on to it later
                             Set<String> entityMap = new HashSet<>();
                             entityMap.add(entityToEntities.getKey());
 
@@ -239,41 +245,41 @@ public class Main
         Set<String> files = new HashSet<>(fileRsfMaker.getAllRelations().get("filebelongstomodule").keySet());
 
         //Numebr of files that don't contain .h suffix
-        double numberOfNonHeaderFiles = files.stream()
+        double sourceFilesInProject = files.stream()
                 .filter(s -> !s.contains(".h"))
                 .count();
 
         System.out.println("Total System Files = " + files.size());
-        System.out.println("Total non .h Files = " + numberOfNonHeaderFiles);
+        System.out.println("Total non .h Files = " + sourceFilesInProject);
 
         //Same count as before but this time done on the final expanded set
-        double nonLibraryFilesInExpansion = finalV
+        double sourceFilesInExpansion = finalV
                 .stream()
                 .filter(s -> !s.contains(".h"))
                 .count();
 
-        System.out.println("Total non .h Files from Expansion= " + nonLibraryFilesInExpansion);
+        System.out.println("Total non .h Files from Expansion= " + sourceFilesInExpansion);
 
-        //Some magic algorithm selection here
-        if (nonLibraryFilesInExpansion < (RANKING_SELECTION_MODIFIER * numberOfNonHeaderFiles))
+        //If our bug is related to less than 15 percent of the total number of source files
+        if (sourceFilesInExpansion < (RANKING_SELECTION_MODIFIER * sourceFilesInProject))
         {
-            outputURanked();
+            //Rank using which files are most involved
+            rankingBasedOnFileConnectivity();
         }
         else
         {
+            //use clustering for bugs that touch a larger number of files
             performClusterRanking();
         }
     }
 
-    private void outputURanked()
+    private void rankingBasedOnFileConnectivity()
     {
-        //Backup the files?
+        //Filter the expanded token filenames set and exclude header files
         Set<String> Visited = finalV.stream().filter(s -> !s.contains(".h")).collect(Collectors.toSet());
 
-        //Clear it?
+        //Clear the set and reload in only source files
         finalV.clear();
-
-        //Add them back?
         finalV.addAll(Visited);
 
         //Get all relationships from rsf
@@ -282,6 +288,7 @@ public class Main
         //Remove unused relationships from set of all file relationships
         unusedRelations.forEach(relationships::remove);
 
+        //A clique is a group of filenames that have been determined to be related to each other using the rsf
         Set<String> clique = new HashSet<>(selectMostConnected(fileRsfMaker.getAllFileRelations(), finalV));
 
         System.out.println("clique size = " + clique.size());
@@ -289,6 +296,7 @@ public class Main
         finalV.forEach(fileName -> fileToCliqueConnectivity.put(fileName, 0.0));
 
         //For each entity value, in each entitySet, in each relationship
+        //TODO: extract reused code block
         relationships.forEach(
                 (relationshipName, entityMap) -> entityMap.forEach(
                         (entity, entitySet) -> entitySet.forEach(
@@ -309,8 +317,8 @@ public class Main
         //Sort by weight
         fileToCliqueConnectivity = sortByComparatorDouble(fileToCliqueConnectivity);
 
+        //Reverse the order
         Map<String, Double> treeMap = new TreeMap<>(Comparator.reverseOrder());
-
         treeMap.putAll(fileToCliqueConnectivity);
 
         //Outputting results to file and standard out
@@ -860,7 +868,9 @@ public class Main
                     solutionFileName2ClusterName.put(fileName, clusterName);
                 }
             }
+
             Set<String> libraryFiles = new HashSet<>();
+
             for (Entry<String, Set<String>> cluster : solutionClusterName2FileName.entrySet())
             {
                 for (String fileName : cluster.getValue())
@@ -873,6 +883,7 @@ public class Main
                 cluster.getValue().removeAll(libraryFiles);
                 libraryFiles.clear();
             }
+
             for (Entry<String, String> toCluster : solutionFileName2ClusterName.entrySet())
             {
                 if (toCluster.getKey().contains(".h"))
@@ -880,10 +891,12 @@ public class Main
                     libraryFiles.add(toCluster.getKey());
                 }
             }
+
             for (String s : libraryFiles)
             {
                 solutionFileName2ClusterName.remove(s);
             }
+
             solutionClusterReader.close();
         }
         catch (IOException ioe)
@@ -913,6 +926,7 @@ public class Main
             fileConnectivity.put(fileName, 0);
         }
 
+        //TODO: Extract reused code block
         for (Entry<String, Map<String, Set<String>>> completeRelation : fileRsfIn.entrySet())
         {
             for (Entry<String, Set<String>> fromEntityToEntities : completeRelation.getValue().entrySet())
@@ -935,14 +949,13 @@ public class Main
 
         int i = fileConnectivity.size();
 
-        for (Entry<String, Integer> forfile : fileConnectivity.entrySet())
+        for (Entry<String, Integer> file : fileConnectivity.entrySet())
         {
-            //HAHAHAHAHAH WHO WROTE THIS?!?!?
             i--;
 
             if (i <= fileConnectivity.size() * 0.1 && i <= 20)
             {
-                mostConnectedFiles.add(forfile.getKey());
+                mostConnectedFiles.add(file.getKey());
             }
         }
         return mostConnectedFiles;
