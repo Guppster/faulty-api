@@ -1,11 +1,9 @@
 package controller
 
-import com.squareup.moshi.JsonReader
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Rfc3339DateJsonAdapter
 import io.javalin.Context
-import model.Issue
 import model.IssuePayload
 import org.kohsuke.github.GHDeploymentBuilder
 import org.kohsuke.github.GHDeploymentState.PENDING
@@ -22,7 +20,7 @@ private const val DEPLOYMENT_STATUS = "DEPLOYMENT_STATUS"
 
 typealias jsonMap = Map<*, *>
 
-class APIController
+class APIController(val repoController: RepoController)
 {
     //Setup to read the incoming Github JSON
     private val moshi = Moshi
@@ -55,7 +53,7 @@ class APIController
     private fun issueHandler(payload: String)
     {
         val issue = issueAdapter.fromJson(payload)
-        println(issue)
+        repoController.submitNewIssue(issue!!)
     }
 
     private fun pullRequestOperation(jsonObject: jsonMap)

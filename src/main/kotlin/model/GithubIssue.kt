@@ -1,6 +1,7 @@
 package model
 
 import com.squareup.moshi.Json
+import org.bson.codecs.pojo.annotations.BsonId
 import java.util.Date
 
 enum class State {
@@ -30,7 +31,7 @@ data class User(val url: String, val login: String)
 
 data class Issue(
         val url: String,
-        val id: Long,
+        @BsonId val id: Long,
         val number: Long,
         val title: String,
         val labels: List<Label> = listOf(),
@@ -46,12 +47,20 @@ data class Issue(
 data class IssuePayload(
         val issue: Issue,
         val action: String,
-        val repository: Any,
-        val sender: Any
+        val repository: GithubRepositoryRawPayload,
+        val sender: GithubSender
 )
 
 data class GithubRepository(
-      val id: Int,
+        val _id: org.bson.types.ObjectId?,
+        val name: String,
+        val url: String,
+        val owner: String,
+        val issues: List<Issue>
+)
+
+data class GithubRepositoryRawPayload(
+      @BsonId val id: Int,
       val name: String,
       val full_name: String,
       val owner: GithubSender,
@@ -103,7 +112,7 @@ data class GithubRepository(
       val ssh_url: String,
       val clone_url: String,
       val svn_url: String,
-      val homepage: String,
+      val homepage: String?,
       val size: Int,
       val stargazers_count: Int,
       val watchers_count: Int,
@@ -114,7 +123,7 @@ data class GithubRepository(
       val has_wiki: Boolean,
       val has_pages: Boolean,
       val forks_count: Int,
-      val mirror_url: String,
+      val mirror_url: String?,
       val archived: Boolean,
       val open_issues_count: Int,
       val license: GithubLicence,

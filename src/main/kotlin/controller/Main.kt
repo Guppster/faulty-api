@@ -13,7 +13,8 @@ fun main(args: Array<String>)
         port(PORT)
     }.start()
 
-    val apiController = APIController()
+    val repoController = RepoController()
+    val apiController = APIController(repoController)
 
     //The root path
     app.routes{
@@ -22,9 +23,12 @@ fun main(args: Array<String>)
            post(apiController::eventHandler)
         }
 
-        path("")
+        path("/")
         {
-            get("/"){ctx -> ctx.result ("Welcome to Faulty")}
+            get(""){ctx -> ctx.result ("Welcome to Faulty")}
+
+            post("add-repo", repoController::new)
+            post("delete-repo", repoController::delete)
         }
     }
 }
