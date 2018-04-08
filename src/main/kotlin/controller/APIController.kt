@@ -5,6 +5,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Rfc3339DateJsonAdapter
 import io.javalin.Context
 import model.IssuePayload
+import mu.KLogging
 import org.kohsuke.github.GHDeploymentBuilder
 import org.kohsuke.github.GHDeploymentState.PENDING
 import org.kohsuke.github.GHDeploymentState.SUCCESS
@@ -22,6 +23,8 @@ typealias jsonMap = Map<*, *>
 
 class APIController(val repoController: RepoController)
 {
+    companion object: KLogging()
+
     //Setup to read the incoming Github JSON
     private val moshi = Moshi
             .Builder()
@@ -36,6 +39,8 @@ class APIController(val repoController: RepoController)
      */
     fun eventHandler(context: Context)
     {
+        logger.info { "Incoming Github webhook caught" }
+
         //Read incoming data from github
         val payload = context.formParam("payload")
         val githubEvent = context.header("X-GITHUB-EVENT")
@@ -52,6 +57,8 @@ class APIController(val repoController: RepoController)
 
     private fun issueHandler(payload: String)
     {
+        logger.info { "Request type: Issue" }
+
         val issue = issueAdapter.fromJson(payload)
         repoController.submitNewIssue(issue!!)
     }

@@ -6,11 +6,15 @@ import com.squareup.moshi.Rfc3339DateJsonAdapter
 import io.javalin.Context
 import model.GithubRepository
 import model.IssuePayload
+import mu.KLogging
+import mu.KotlinLogging
 import org.litote.kmongo.*
 import java.util.*
 
-class RepoController
+class RepoController(val analysisController: AnalysisController)
 {
+    companion object: KLogging()
+
     val mongo = KMongo.createClient()
     val faultyDB = mongo.getDatabase("Faulty")
     val reposDB = faultyDB.getCollection<GithubRepository>()
@@ -43,8 +47,9 @@ class RepoController
         val fetchedRepo = reposDB.findOne("{name: ${issuePayload.repository.name.json}}")
 
         fetchedRepo!!.issues.add(issuePayload.issue)
-
         reposDB.replaceOne(fetchedRepo)
 
+        //Trigger a new analysis of the process
+        analysisController.processIssue(fetchedRepo, issuePayload.issue)
     }
 }

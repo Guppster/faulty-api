@@ -44,6 +44,7 @@ dependencies {
     compile group: 'org.kohsuke', name: 'github-api', version: '1.92'
 
     //Testing
+    compile 'io.github.microutils:kotlin-logging:1.4.9'
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
     testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     testCompile 'org.jetbrains.spek:spek-api:1.1.5'
