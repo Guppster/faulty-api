@@ -1,18 +1,22 @@
 package controller
 
-import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonReader
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
+import com.squareup.moshi.Rfc3339DateJsonAdapter
 import io.javalin.Context
+import model.Issue
+import model.IssuePayload
 import org.kohsuke.github.GHDeploymentBuilder
 import org.kohsuke.github.GHDeploymentState.PENDING
 import org.kohsuke.github.GHDeploymentState.SUCCESS
 import org.kohsuke.github.GHDeploymentStatusBuilder
 import org.kohsuke.github.GitHubBuilder
+import java.util.*
 
 //Github event constants
 private const val PULL_REQUEST = "pull_request"
+private const val ISSUE_OPENED = "issues"
 private const val DEPLOYMENT = "DEPLOYMENT"
 private const val DEPLOYMENT_STATUS = "DEPLOYMENT_STATUS"
 
@@ -21,10 +25,13 @@ typealias jsonMap = Map<*, *>
 class APIController
 {
     //Setup to read the incoming Github JSON
-    private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-    private val genericJSON = Types.newParameterizedType(Map::class.java, String::class.java, Object::class.java)
-    private var adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(genericJSON)
+    private val moshi = Moshi
+            .Builder()
+            .add(KotlinJsonAdapterFactory())
+            .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
+            .build()
 
+    private var issueAdapter = moshi.adapter(IssuePayload::class.java).lenient()
 
     /**
      * Route incoming webhooks depending on header and parse json
@@ -32,17 +39,23 @@ class APIController
     fun eventHandler(context: Context)
     {
         //Read incoming data from github
-        val payload = context.body()
+        val payload = context.formParam("payload")
         val githubEvent = context.header("X-GITHUB-EVENT")
-        val jsonMap = adapter.fromJson(payload)
 
         //Decide what to do with it
         when (githubEvent)
         {
-            PULL_REQUEST -> pullRequestOperation(jsonMap!!)
-            DEPLOYMENT -> processDeployment(jsonMap!!)
-            DEPLOYMENT_STATUS -> updateDeploymentStatus(jsonMap!!)
+            ISSUE_OPENED -> issueHandler(payload!!)
+            //PULL_REQUEST -> pullRequestOperation(jsonMap!!)
+            //DEPLOYMENT -> processDeployment(jsonMap!!)
+            //DEPLOYMENT_STATUS -> updateDeploymentStatus(jsonMap!!)
         }
+    }
+
+    private fun issueHandler(payload: String)
+    {
+        val issue = issueAdapter.fromJson(payload)
+        println(issue)
     }
 
     private fun pullRequestOperation(jsonObject: jsonMap)
@@ -65,7 +78,7 @@ class APIController
         val headMap = jsonObject["head"] as jsonMap
 
         val payloadMap = mapOf("environment" to "QA", "deploy_user" to user)
-        val payload = adapter.toJson(payloadMap)
+        //val payload = adapter.toJson(payloadMap)
 
         val gitHub = GitHubBuilder.fromEnvironment().build()
 
@@ -80,7 +93,8 @@ class APIController
         val deploymentMap = jsonObject["deployment"] as jsonMap
         val payloadString = deploymentMap["payload"] as String
 
-        val payload = adapter.fromJson(payloadString)
+        //val payload = adapter.fromJson(payloadString)
+        val payload = mapOf<String, String>("hi" to "hi")
 
         println("Processing ${deploymentMap["description"] as String} for ${payload!!["deploy_user"] as String} to ${payload["environment"] as String}")
 
