@@ -1,7 +1,4 @@
-package gr.ntua.softlab.solutionspace;
-
-import gr.ntua.softlab.filepaths.Paths;
-import gr.ntua.softlab.rsfrepresentation.RsfRepresentation;
+package com.buglocalization;
 
 import java.io.BufferedReader;
 import java.io.File;

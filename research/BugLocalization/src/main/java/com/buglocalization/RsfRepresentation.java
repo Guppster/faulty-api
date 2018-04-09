@@ -1,9 +1,7 @@
 /**
  *
  */
-package gr.ntua.softlab.rsfrepresentation;
-
-import gr.ntua.softlab.cdifutilities.CdifRepresentation;
+package com.buglocalization;
 
 import java.util.*;
 import java.util.Map.Entry;

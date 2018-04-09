@@ -1,9 +1,4 @@
-package gr.ntua.softlab.main;
-
-import gr.ntua.softlab.filepaths.Paths;
-import gr.ntua.softlab.makefilersf.FileRsfMaker;
-import gr.ntua.softlab.solutionspace.InputReader;
-import gr.ntua.softlab.solutionspaceclustering.ThreadTest;
+package com.buglocalization;
 
 import java.io.*;
 import java.util.*;
@@ -140,7 +135,7 @@ public class Main
      * This method takes a Map of <Relationship Name, <Entity Key, Entities related to key Entity>>
      * and transforms it into <Relationship Name, <Entity value, Entity keys pointing to this value>>
      * (in)Effectively reversing the inner-map
-     *
+     * <p>
      * This reverse map is used while expanding the token set during the ranking process
      */
     private void reverseAllFileRelations()

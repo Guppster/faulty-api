@@ -1,4 +1,4 @@
-package gr.ntua.softlab.filepaths;
+package com.buglocalization;
 
 //TODO: Destroy hardcoded file paths
 public class Paths

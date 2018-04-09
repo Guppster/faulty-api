@@ -1,9 +1,4 @@
-package gr.ntua.softlab.makefilersf;
-
-import gr.ntua.softlab.cdifutilities.CdifRepresentation;
-import gr.ntua.softlab.filepaths.Paths;
-import gr.ntua.softlab.rsfReader.RsfReader;
-import gr.ntua.softlab.rsfrepresentation.RsfRepresentation;
+package com.buglocalization;
 
 import java.io.BufferedWriter;
 import java.io.File;
