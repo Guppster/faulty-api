@@ -1,18 +1,19 @@
-package acdc;
+package com.buglocalization.acdc;
+
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.util.*;
+import java.util.Vector;
 
 public class UpInducer extends Pattern
 {
-	public UpInducer (DefaultMutableTreeNode _root)
-	{
-		super(_root);
-	}
-	
-	public void execute() 
-	{
-		// Remove intermediate clusters from the tree
-		Vector rootChildren = nodeChildren(root);
+    public UpInducer(DefaultMutableTreeNode _root)
+    {
+        super(_root);
+    }
+
+    public void execute()
+    {
+        // Remove intermediate clusters from the tree
+        Vector rootChildren = nodeChildren(root);
 
         for (Object aRootChildren : rootChildren)
         {
@@ -31,5 +32,5 @@ public class UpInducer extends Pattern
                 }
             }
         }
-	}
+    }
 }

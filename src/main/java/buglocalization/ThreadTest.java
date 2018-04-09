@@ -1,6 +1,6 @@
-package com.buglocalization;
+package buglocalization;
 
-import com.buglocalization.acdc.ACDC;
+import buglocalization.acdc.ACDC;
 
 import java.io.File;
 import java.util.concurrent.ExecutorService;

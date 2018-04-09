@@ -1,4 +1,4 @@
-package acdc;
+package com.buglocalization.acdc;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.BufferedReader;

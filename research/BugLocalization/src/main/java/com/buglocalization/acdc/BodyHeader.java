@@ -1,53 +1,54 @@
-package acdc;
+package com.buglocalization.acdc;
+
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Enumeration;
 import java.util.Vector;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  * This pattern lumps a header file (a .h file) and a body file (a .c file)
  * into a cluster. The cluster is named using the common part of the component
- * files names followed by the suffix ".ch". 
+ * files names followed by the suffix ".ch".
  * If clustering has already been done, a message is output to  the user
  * Commented out lines that modify vTree on the fly
  */
- public class BodyHeader extends Pattern
- {
-	public BodyHeader(DefaultMutableTreeNode _root)
-	{
-		super(_root);
-		name = "Body Header";
-	}
+public class BodyHeader extends Pattern
+{
+    public BodyHeader(DefaultMutableTreeNode _root)
+    {
+        super(_root);
+        name = "Body Header";
+    }
 
-	public void execute()
-	{
-		Vector vModified = new Vector();//will contain nodes which were moved
-		Vector vTree = allNodes(root);
-		
-		//traverse the files with extension .c or .h in the tree looking for
-		//their counterpart file with extension .h and respectively .c 		
-    	for (int i=0; i<vTree.size(); i++)
-		{
-			Node ncurr = (Node)vTree.elementAt(i);
-			DefaultMutableTreeNode curr = ncurr.getTreeNode();
-                              			
-      		if (ncurr.isFile())
-			{
-				IO.put("Considering file: " + ncurr.getName(),2);
-				//if the current .h or .c file is not in the vector vTree, it means that its
-				//counterpart file was checked and a cluster containing has been created 
-				if (((ncurr.getName().endsWith(".c")) || (ncurr.getName().endsWith(".h")))) // Removed this: && vTree.contains(ncurr))
-      			{
-					DefaultMutableTreeNode curr_parent = (DefaultMutableTreeNode)curr.getParent();
+    public void execute()
+    {
+        Vector vModified = new Vector();//will contain nodes which were moved
+        Vector vTree = allNodes(root);
 
-					if (alreadyClustered(curr_parent))
-					{
-						IO.put("\tAlready in a body-header cluster",2);
-					} 
-					else
-					{	
-						String toFind = "";
-						// Loop through the vector of remaining .h and .c 
-						// files to find counterpart file
+        //traverse the files with extension .c or .h in the tree looking for
+        //their counterpart file with extension .h and respectively .c
+        for (int i = 0; i < vTree.size(); i++)
+        {
+            Node ncurr = (Node) vTree.elementAt(i);
+            DefaultMutableTreeNode curr = ncurr.getTreeNode();
+
+            if (ncurr.isFile())
+            {
+                IO.put("Considering file: " + ncurr.getName(), 2);
+                //if the current .h or .c file is not in the vector vTree, it means that its
+                //counterpart file was checked and a cluster containing has been created
+                if (((ncurr.getName().endsWith(".c")) || (ncurr.getName().endsWith(".h")))) // Removed this: && vTree.contains(ncurr))
+                {
+                    DefaultMutableTreeNode curr_parent = (DefaultMutableTreeNode) curr.getParent();
+
+                    if (alreadyClustered(curr_parent))
+                    {
+                        IO.put("\tAlready in a body-header cluster", 2);
+                    }
+                    else
+                    {
+                        String toFind = "";
+                        // Loop through the vector of remaining .h and .c
+                        // files to find counterpart file
                         for (Object aVTree : vTree)
                         {
                             Node vnode = (Node) aVTree;
@@ -115,30 +116,30 @@ import javax.swing.tree.DefaultMutableTreeNode;
                             }
                         }// end for
 
-					}//end else
-      			}
-			}// end if isFile
-		}// end for i
-	   
-	    induceEdges(vModified,root);
+                    }//end else
+                }
+            }// end if isFile
+        }// end for i
 
-	} // end execute
+        induceEdges(vModified, root);
 
-	private boolean alreadyClustered(DefaultMutableTreeNode curr_parent)
-	{	
-		Node ncurr_parent = (Node) curr_parent.getUserObject();
-		boolean isCModule = ncurr_parent.getName().endsWith(".ch");
-		boolean hasTwoKids = (curr_parent.getChildCount() == 2);
-		DefaultMutableTreeNode first_child = (DefaultMutableTreeNode) curr_parent.getFirstChild();
-		Node nfirst_child = (Node)first_child.getUserObject();
-		DefaultMutableTreeNode second_child = (DefaultMutableTreeNode) curr_parent.getLastChild();
-		Node nsecond_child = (Node)second_child.getUserObject();
-		boolean sameBaseNames = ncurr_parent.getBaseName().equalsIgnoreCase(nfirst_child.getBaseName()) &&
-								ncurr_parent.getBaseName().equalsIgnoreCase(nsecond_child.getBaseName());
-		boolean dotCHFiles = (nfirst_child.getName().endsWith(".c") && nsecond_child.getName().endsWith(".h")) ||
-							 (nfirst_child.getName().endsWith(".h") && nsecond_child.getName().endsWith(".c"));
-							 
-		return isCModule && hasTwoKids && sameBaseNames && dotCHFiles;
+    } // end execute
+
+    private boolean alreadyClustered(DefaultMutableTreeNode curr_parent)
+    {
+        Node ncurr_parent = (Node) curr_parent.getUserObject();
+        boolean isCModule = ncurr_parent.getName().endsWith(".ch");
+        boolean hasTwoKids = (curr_parent.getChildCount() == 2);
+        DefaultMutableTreeNode first_child = (DefaultMutableTreeNode) curr_parent.getFirstChild();
+        Node nfirst_child = (Node) first_child.getUserObject();
+        DefaultMutableTreeNode second_child = (DefaultMutableTreeNode) curr_parent.getLastChild();
+        Node nsecond_child = (Node) second_child.getUserObject();
+        boolean sameBaseNames = ncurr_parent.getBaseName().equalsIgnoreCase(nfirst_child.getBaseName()) &&
+                                ncurr_parent.getBaseName().equalsIgnoreCase(nsecond_child.getBaseName());
+        boolean dotCHFiles = (nfirst_child.getName().endsWith(".c") && nsecond_child.getName().endsWith(".h")) ||
+                             (nfirst_child.getName().endsWith(".h") && nsecond_child.getName().endsWith(".c"));
+
+        return isCModule && hasTwoKids && sameBaseNames && dotCHFiles;
 //		// Parent has exactly two children
 //		if(curr_parent.getChildCount() == 2)
 //		{
@@ -170,5 +171,5 @@ import javax.swing.tree.DefaultMutableTreeNode;
 //		else
 //			IO.put("Children of : " +ncurr_parent.getName() + " ! = 2 ",2);
 //	}
-	}
+    }
 }// end class

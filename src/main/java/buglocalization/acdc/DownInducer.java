@@ -1,18 +1,20 @@
-package acdc;
+package buglocalization.acdc;
+
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Vector;
 
 public class DownInducer extends Pattern
 {
-	public DownInducer(DefaultMutableTreeNode _root)
-	{
-		super(_root);
-	}
-	
-	public void execute() 
-	{
-		// Remove all but fine-grain clusters from the tree	
-		Vector allNodes = allNodes(root);
+    public DownInducer(DefaultMutableTreeNode _root)
+    {
+        super(_root);
+    }
+
+    public void execute()
+    {
+        // Remove all but fine-grain clusters from the tree
+        Vector allNodes = allNodes(root);
 
         for (Object allNode : allNodes)
         {
@@ -43,5 +45,5 @@ public class DownInducer extends Pattern
                 tparent.removeAllChildren();
             }
         }
-	}
+    }
 }

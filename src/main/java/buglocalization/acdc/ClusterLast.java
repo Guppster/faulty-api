@@ -1,31 +1,34 @@
-package acdc;
-import java.util.Iterator;
-import java.util.Vector;
+package buglocalization.acdc;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.Vector;
 
 /**
-* This pattern puts together all orphans under one cluster node named
-* "orphanContainer", which in turn is inserted under the root of the tree.
-*/
-public class ClusterLast extends Pattern {
-	public ClusterLast(DefaultMutableTreeNode _root) {
-		super(_root);
-		name = "Cluster Last";
-	}
+ * This pattern puts together all orphans under one cluster node named
+ * "orphanContainer", which in turn is inserted under the root of the tree.
+ */
+public class ClusterLast extends Pattern
+{
+    public ClusterLast(DefaultMutableTreeNode _root)
+    {
+        super(_root);
+        name = "Cluster Last";
+    }
 
-	public void execute() {
-		Vector vModified = new Vector();
+    public void execute()
+    {
+        Vector vModified = new Vector();
 
-		if (orphanNumber() != 0) {
-			IO.put("Clustering leftover nodes",2);
-			// Create a node of type Subsystem which will contain all the remaining unclustered orphans 
-			Node nOrphanContainer = new Node("orphanContainer.ss", "Subsystem");
-			DefaultMutableTreeNode orphanContainer = new DefaultMutableTreeNode(nOrphanContainer);
-			nOrphanContainer.setTreeNode(orphanContainer);
-			root.add(orphanContainer);
+        if (orphanNumber() != 0)
+        {
+            IO.put("Clustering leftover nodes", 2);
+            // Create a node of type Subsystem which will contain all the remaining unclustered orphans
+            Node nOrphanContainer = new Node("orphanContainer.ss", "Subsystem");
+            DefaultMutableTreeNode orphanContainer = new DefaultMutableTreeNode(nOrphanContainer);
+            nOrphanContainer.setTreeNode(orphanContainer);
+            root.add(orphanContainer);
 
-			Vector allOrphans = orphans();
+            Vector allOrphans = orphans();
 
             for (Object allOrphan : allOrphans)
             {
@@ -61,8 +64,8 @@ public class ClusterLast extends Pattern {
 */
                 }
             } // end while
-		} //end if
+        } //end if
 
-		//induceEdges(vModified, root);
-	} //end clusterLast
+        //induceEdges(vModified, root);
+    } //end clusterLast
 }
