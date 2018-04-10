@@ -1,0 +1,186 @@
+productName : 
+168660_LSA.txt
+Total expansion Steps = 0
+Total System Files = 816
+Total non .h Files = 448.0
+Total non .h Files from Expansion= 0.0
+Starting with 0 files, after removing .h I am left with 0 files
+clique size = 0
+168660
+--------------------------------------
+315463_LSA.txt
+Total expansion Steps = 1
+Total System Files = 816
+Total non .h Files = 448.0
+Total non .h Files from Expansion= 4.0
+Starting with 4 files, after removing .h I am left with 4 files
+clique size = 1
+315463
+	src/projects/k3bdataprojectmodel.cpp                                                 	       3.000000	
+	src/main.cpp                                                                         	       3.000000	
+	src/k3bjobprogressdialog.cpp                                                         	       8.000000	<-------------
+	libk3b/projects/videodvd/k3bvideodvddoc.cpp                                          	       2.000000	
+--------------------------------------
+328258_LSA.txt
+Total expansion Steps = 1
+Total System Files = 816
+Total non .h Files = 448.0
+Total non .h Files from Expansion= 11.0
+Starting with 11 files, after removing .h I am left with 11 files
+clique size = 2
+328258
+	src/projects/k3bdataprojectmodel.cpp                                                 	       3.000000	
+	src/projects/k3baudiotrackwidget.cpp                                                 	       2.000000	
+	src/projects/k3baudiotracksplitdialog.cpp                                            	       2.000000	
+	src/projects/k3baudiodatasourceeditwidget.cpp                                        	       2.000000	
+	src/main.cpp                                                                         	       3.000000	
+	src/k3bjobprogressdialog.cpp                                                         	       8.000000	
+	libk3bdevice/k3bdeviceglobals.cpp                                                    	       3.000000	
+	libk3bdevice/k3bdevice_mmc.cpp                                                       	       3.000000	
+	libk3b/tools/k3bmsfedit.cpp                                                          	       1.000000	
+	libk3b/projects/videodvd/k3bvideodvddoc.cpp                                          	       2.000000	
+	libk3b/projects/audiocd/k3baudiojob.cpp                                              	      11.000000	
+--------------------------------------
+328769_LSA.txt
+Total expansion Steps = 1
+Total System Files = 816
+Total non .h Files = 448.0
+Total non .h Files from Expansion= 13.0
+Starting with 13 files, after removing .h I am left with 13 files
+clique size = 2
+328769
+	src/projects/k3bdataprojectmodel.cpp                                                 	       3.000000	
+	src/projects/k3baudiotrackwidget.cpp                                                 	       2.000000	
+	src/projects/k3baudiotracksplitdialog.cpp                                            	       2.000000	
+	src/projects/k3baudiodatasourceeditwidget.cpp                                        	       2.000000	
+	src/main.cpp                                                                         	       3.000000	
+	src/k3bjobprogressdialog.cpp                                                         	       8.000000	
+	libk3bdevice/k3bdeviceglobals.cpp                                                    	       3.000000	
+	libk3bdevice/k3bdevice_mmc.cpp                                                       	       3.000000	
+	libk3b/tools/k3bmsfedit.cpp                                                          	       1.000000	
+	libk3b/tools/k3blibdvdcss.cpp                                                        	       3.000000	<-------------
+	libk3b/tools/k3bcdparanoialib.cpp                                                    	       1.000000	<-------------
+	libk3b/projects/videodvd/k3bvideodvddoc.cpp                                          	       2.000000	
+	libk3b/projects/audiocd/k3baudiojob.cpp                                              	      11.000000	
+--------------------------------------
+337201_LSA.txt
+Total expansion Steps = 1
+Total System Files = 816
+Total non .h Files = 448.0
+Total non .h Files from Expansion= 17.0
+Starting with 17 files, after removing .h I am left with 17 files
+clique size = 2
+337201
+	src/rip/k3baudioconvertingoptionwidget.cpp                                           	       2.000000	
+	src/projects/k3bdataprojectmodel.cpp                                                 	       3.000000	
+	src/projects/k3baudiotrackwidget.cpp                                                 	       2.000000	
+	src/projects/k3baudiotracksplitdialog.cpp                                            	       2.000000	
+	src/projects/k3baudiodatasourceeditwidget.cpp                                        	       2.000000	
+	src/main.cpp                                                                         	       3.000000	
+	src/k3bjobprogressdialog.cpp                                                         	       8.000000	
+	libk3bdevice/k3bdeviceglobals.cpp                                                    	       3.000000	
+	libk3bdevice/k3bdevice_mmc.cpp                                                       	       3.000000	
+	libk3b/tools/k3bmsfedit.cpp                                                          	       1.000000	
+	libk3b/tools/k3blibdvdcss.cpp                                                        	       3.000000	
+	libk3b/tools/k3bcdparanoialib.cpp                                                    	       1.000000	
+	libk3b/projects/videodvd/k3bvideodvddoc.cpp                                          	       2.000000	
+	libk3b/projects/k3bcuefileparser.cpp                                                 	       2.000000	<-------------
+	libk3b/projects/datacd/k3bisooptions.cpp                                             	       1.000000	
+	libk3b/projects/datacd/k3bisoimager.cpp                                              	       6.000000	
+	libk3b/projects/audiocd/k3baudiojob.cpp                                              	      11.000000	
+--------------------------------------
+340515_LSA.txt
+Total expansion Steps = 1
+Total System Files = 816
+Total non .h Files = 448.0
+Total non .h Files from Expansion= 18.0
+Starting with 18 files, after removing .h I am left with 18 files
+clique size = 2
+340515
+	src/rip/k3baudioconvertingoptionwidget.cpp                                           	       2.000000	
+	src/projects/k3bdataprojectmodel.cpp                                                 	       3.000000	
+	src/projects/k3baudiotrackwidget.cpp                                                 	       2.000000	
+	src/projects/k3baudiotracksplitdialog.cpp                                            	       2.000000	
+	src/projects/k3baudiodatasourceeditwidget.cpp                                        	       2.000000	
+	src/main.cpp                                                                         	       3.000000	
+	src/k3blsofwrapper.cpp                                                               	       3.000000	<-------------
+	src/k3bjobprogressdialog.cpp                                                         	       8.000000	
+	libk3bdevice/k3bdeviceglobals.cpp                                                    	       3.000000	
+	libk3bdevice/k3bdevice_mmc.cpp                                                       	       3.000000	
+	libk3b/tools/k3bmsfedit.cpp                                                          	       1.000000	
+	libk3b/tools/k3blibdvdcss.cpp                                                        	       3.000000	
+	libk3b/tools/k3bcdparanoialib.cpp                                                    	       1.000000	
+	libk3b/projects/videodvd/k3bvideodvddoc.cpp                                          	       2.000000	
+	libk3b/projects/k3bcuefileparser.cpp                                                 	       2.000000	
+	libk3b/projects/datacd/k3bisooptions.cpp                                             	       1.000000	
+	libk3b/projects/datacd/k3bisoimager.cpp                                              	       6.000000	
+	libk3b/projects/audiocd/k3baudiojob.cpp                                              	      11.000000	
+--------------------------------------
+341077_LSA.txt
+Total expansion Steps = 1
+Total System Files = 816
+Total non .h Files = 448.0
+Total non .h Files from Expansion= 19.0
+Starting with 19 files, after removing .h I am left with 19 files
+clique size = 2
+341077
+	src/rip/k3baudioconvertingoptionwidget.cpp                                           	       2.000000	
+	src/projects/k3bdataprojectmodel.cpp                                                 	       3.000000	
+	src/projects/k3baudiotrackwidget.cpp                                                 	       2.000000	
+	src/projects/k3baudiotracksplitdialog.cpp                                            	       2.000000	
+	src/projects/k3baudiodatasourceeditwidget.cpp                                        	       2.000000	
+	src/main.cpp                                                                         	       3.000000	
+	src/k3blsofwrapper.cpp                                                               	       3.000000	
+	src/k3bjobprogressdialog.cpp                                                         	       8.000000	
+	plugins/decoder/flac/k3bflacdecoder.cpp                                              	       2.000000	<-------------
+	libk3bdevice/k3bdeviceglobals.cpp                                                    	       3.000000	
+	libk3bdevice/k3bdevice_mmc.cpp                                                       	       3.000000	
+	libk3b/tools/k3bmsfedit.cpp                                                          	       1.000000	
+	libk3b/tools/k3blibdvdcss.cpp                                                        	       3.000000	
+	libk3b/tools/k3bcdparanoialib.cpp                                                    	       1.000000	
+	libk3b/projects/videodvd/k3bvideodvddoc.cpp                                          	       2.000000	
+	libk3b/projects/k3bcuefileparser.cpp                                                 	       2.000000	
+	libk3b/projects/datacd/k3bisooptions.cpp                                             	       1.000000	
+	libk3b/projects/datacd/k3bisoimager.cpp                                              	       6.000000	
+	libk3b/projects/audiocd/k3baudiojob.cpp                                              	      11.000000	
+--------------------------------------
+341435_LSA.txt
+Total expansion Steps = 1
+Total System Files = 816
+Total non .h Files = 448.0
+Total non .h Files from Expansion= 31.0
+Starting with 31 files, after removing .h I am left with 31 files
+clique size = 4
+341435
+	src/rip/k3baudioconvertingoptionwidget.cpp                                           	       2.000000	
+	src/rip/k3baudiocdview.cpp                                                           	       5.000000	<-------------
+	src/projects/k3bdataurladdingdialog.cpp                                              	       2.000000	
+	src/projects/k3bdataprojectmodel.cpp                                                 	       3.000000	
+	src/projects/k3baudiotrackwidget.cpp                                                 	       2.000000	
+	src/projects/k3baudiotracksplitdialog.cpp                                            	       2.000000	
+	src/projects/k3baudiotrackaddingdialog.cpp                                           	       1.000000	
+	src/projects/k3baudiodatasourceeditwidget.cpp                                        	       2.000000	
+	src/main.cpp                                                                         	       3.000000	
+	src/k3bwelcomewidget.cpp                                                             	       5.000000	
+	src/k3blsofwrapper.cpp                                                               	       3.000000	
+	src/k3bjobprogressdialog.cpp                                                         	       8.000000	
+	src/k3bapplication.cpp                                                               	      10.000000	
+	plugins/project/audiometainforenamer/k3baudiometainforenamerplugin.cpp               	       5.000000	
+	plugins/decoder/mp3/k3bmaddecoder.cpp                                                	      10.000000	
+	plugins/decoder/flac/k3bflacdecoder.cpp                                              	       2.000000	
+	libk3bdevice/k3bdeviceglobals.cpp                                                    	       3.000000	
+	libk3bdevice/k3bdevice_mmc.cpp                                                       	       3.000000	
+	libk3b/tools/k3bmultichoicedialog.cpp                                                	       3.000000	
+	libk3b/tools/k3bmsfedit.cpp                                                          	       1.000000	
+	libk3b/tools/k3blibdvdcss.cpp                                                        	       3.000000	
+	libk3b/tools/k3bcdparanoialib.cpp                                                    	       1.000000	
+	libk3b/projects/videodvd/k3bvideodvddoc.cpp                                          	       2.000000	
+	libk3b/projects/k3bcuefileparser.cpp                                                 	       2.000000	
+	libk3b/projects/k3bcdrecordwriter.cpp                                                	       1.000000	
+	libk3b/projects/k3bcdrdaowriter.cpp                                                  	       2.000000	
+	libk3b/projects/datacd/k3bisooptions.cpp                                             	       1.000000	
+	libk3b/projects/datacd/k3bisoimager.cpp                                              	       6.000000	
+	libk3b/projects/datacd/k3bdatapreparationjob.cpp                                     	       5.000000	
+	libk3b/projects/audiocd/k3baudiojob.cpp                                              	      11.000000	
+	libk3b/core/k3bthreadjob.cpp                                                         	       4.000000	
+--------------------------------------
